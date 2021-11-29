@@ -11,7 +11,7 @@ Usage: makeGTF_emapper.py longORFS.fasta longORFS.pep geneID_type outDir
 Arguments:
 longORFS.fasta -- nucleotide fasta file with open reading frames
 longORFS.pep -- protein fasta file with open reading frames
-geneID_type -- type of gene identifier; type_1 = "compXX_cXX_seqXX", type_2="TRINITY_DNXXXXX_cX_gX_iX", type_3="SegXX.XX.XXXX"
+geneID_type -- type of gene/transcript identifier; type_1 = "compXX_cXX_seqXX", type_2="TRINITY_DNXXXXX_cX_gX_iX", type_3="SegXX.XX.XXXX"
 outDir -- path to output directory
 """
 
@@ -23,7 +23,9 @@ from Bio import SeqIO
 
 # Path to programs and files
 emapper = "/gpfs/ysm/project/dunn/nnp9/conda_envs/emapper/bin/emapper.py"  # path to eggNOG mapper 2.0.6
-python = "/gpfs/ysm/project/dunn/nnp9/conda_envs/emapper/bin/python"  # path to python 3.7
+python = (
+    "/gpfs/ysm/project/dunn/nnp9/conda_envs/emapper/bin/python"  # path to python 3.7
+)
 gonames_file = "/home/nnp9/local/datasets/go_terms_2019.txt"  # GO Terms IDs and their corresponding names from 2019 GO release
 
 
@@ -34,34 +36,36 @@ geneID_type = sys.argv[3]  # type of gene identifier
 outDir = sys.argv[4]  # output directory
 filename = PurePosixPath(transcriptomeFile).name
 
-# Functionally annotate the ORF sequences with eggNOG-mapper
-subprocess.call(
-    [
-        python,
-        emapper,
-        "-i",
-        proteinFile,
-        "-m",
-        "diamond",
-        "-o",
-        filename,
-        "--cpu",
-        "15",
-        "--output_dir",
-        outDir,
-    ]
-)
+# # Functionally annotate the ORF sequences with eggNOG-mapper
+# subprocess.call(
+#     [
+#         python,
+#         emapper,
+#         "-i",
+#         proteinFile,
+#         "-m",
+#         "diamond",
+#         "-o",
+#         filename,
+#         "--cpu",
+#         "15",
+#         "--output_dir",
+#         outDir,
+#     ]
+# )
 
-# Generate a gene list and the gene ID to transcript ID map from the original transcriptome file
+# Generate a gene list and the gene ID/transcript ID map from the original transcriptome file
 geneListFile = (
     outDir + "/" + filename + ".gene_list.txt"
 )  # unique list of genes, one gene per line. SHOULD REPRESENT ALL TRANSCRIPTS (NOT JUST PROTEINS)
 transcriptIDtogeneIDFile = outDir + "/" + filename + ".transcriptID_to_gene.txt"
+geneIDtotranscriptIDFile = outDir + "/" + filename + ".geneID_to_transcript.txt"
 
 if geneID_type == "type_1":
     searchStr = "((comp\d+_c\d+)_seq\d+)"
 if geneID_type == "type_2":
     searchStr = "((TRINITY_DN\d+_c\d+_g\d+)_i\d+)"
+    protein_searchStr = "((TRINITY_DN\d+_c\d+_g\d+)_i\d+.p\d)"
 if geneID_type == "type_3":
     searchStr = "((Seg\d+)\..+)"
 if geneID_type == "type_4":
@@ -70,14 +74,16 @@ if geneID_type == "type_4":
 with open(transcriptomeFile, "r") as infile:
     with open(geneListFile, "w") as outfile1:
         with open(transcriptIDtogeneIDFile, "w") as outfile2:
-            for line in infile:
-                if line.startswith(">"):
-                    line = line.strip("\n")
-                    p = re.search(searchStr, line)
-                    geneID = p.group(2)
-                    transcriptID = p.group(1)
-                    outfile1.write(geneID + "\n")
-                    outfile2.write(transcriptID + "\t" + geneID + "\n")
+            with open(geneIDtotranscriptIDFile, "w") as outfile3:
+                for line in infile:
+                    if line.startswith(">"):
+                        line = line.strip("\n")
+                        p = re.search(searchStr, line)
+                        geneID = p.group(2)
+                        transcriptID = p.group(1)
+                        outfile1.write(geneID + "\n")
+                        outfile2.write(transcriptID + "\t" + geneID + "\n")
+                        outfile3.write(geneID + "\t" + transcriptID + "\n")
 
 # Generate the gene ID to protein ID map from the eggNOG annotation file
 emapperFile = outDir + "/" + filename + ".emapper.annotations"
@@ -93,7 +99,7 @@ with open(emapperFile, "r") as infile:
             else:
                 line = line.strip("\n")
                 elementList = line.split("\t")
-                p = re.search(searchStr, elementList[0])
+                p = re.search(protein_searchStr, elementList[0])
                 geneID = p.group(2)
                 proteinID = p.group(1)
                 outfile.write(proteinID + "\t" + geneID + "\n")

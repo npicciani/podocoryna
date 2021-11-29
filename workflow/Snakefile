@@ -6,8 +6,9 @@ configfile: "config/config.yaml"
 
 # load rules
 include: "rules/reference.smk"
-include: "rules/stats.smk"
 include: "rules/cellranger.smk"
+include: "rules/trinotate.smk"
+include: "rules/stats.smk"
 
 # target rule
 rule all:
@@ -20,4 +21,3 @@ rule all:
         "results/mitofinder",
         "results/trinotate/trinotate_annotation_report.xls",
         "results/trinotate/go_annotations.txt"
-

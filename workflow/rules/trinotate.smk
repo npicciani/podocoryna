@@ -29,10 +29,10 @@ rule trinotate_hits:
     input:
         "results/trinotate/uniprot_sprot.pep",
         "results/trinotate/Pfam-A.hmm",
-        fastafile = expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["fileStem"]),
-        peptidefile = expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["fileStem"]),
-        transdecoder_peptidefile = expand("results/reference/{transcriptome}.transdecoder_dir/longest_orfs.pep", transcriptome=config["reference"]["fileStem"]),
-        geneTranscript_map = expand("results/reference/{transcriptome}_longestORFperGene.fasta.geneID_to_transcript.txt", transcriptome=config["reference"]["fileStem"]),
+        fastafile = expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
+        peptidefile = expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["filename"]),
+        transdecoder_peptidefile = expand("results/reference/{transcriptome}.transdecoder_dir/longest_orfs.pep", transcriptome=config["reference"]["filename"]),
+        geneTranscript_map = expand("results/reference/{transcriptome}_longestORFperGene.fasta.geneID_to_transcript.txt", transcriptome=config["reference"]["filename"]),
     output:
         "results/trinotate/blastx.outfmt6",
         "results/trinotate/blastp.outfmt6",
