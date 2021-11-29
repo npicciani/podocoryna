@@ -8,6 +8,8 @@ rule generate_longest_ORFs:
         expand("results/reference/{transcriptome}.transdecoder_dir/longest_orfs.pep", transcriptome=config["reference"]["filename"])
     params:
         referenceFilename=expand("{transcriptome}", transcriptome=config["reference"]["filename"])
+    conda:
+        "../../workflow/envs/transdecoder.yaml" #transdecoder v5.5.0
     shell:
         "TransDecoder.LongOrfs -t {input.transcriptomePath} --output_dir results/reference/{params.referenceFilename}.transdecoder_dir"
 
