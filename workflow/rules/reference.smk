@@ -61,3 +61,30 @@ rule get_mitochondrial_genes:
         mkdir {output} && cd {output}
         mitofinder -j podocoryna -a ../../{input.nucleotides} -r ../../{params.mit_reference} -o 4 -m {params.mem} -p {threads}
         """
+
+rule get_annotated_transcripts:
+    input:
+        nucleotides=expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
+        script="workflow/scripts/getSequences_onefasta.py"
+    output:
+        expand("results/reference/{transcriptome}_longestORFperGene.selected.fasta", transcriptome=config["reference"]["filename"])
+    threads: 20
+    params:
+        transcriptlist="results/trinotate/transcripts_with_annotation.txt"
+    shell:
+        """
+        python {input.script} {params.transcriptlist} {input.nucleotides} results/reference
+        """
+
+rule select_from_gtf:
+    input:
+        gtf=expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf", transcriptome=config["reference"]["filename"]),
+        script="workflow/scripts/select_from_gtf.py"
+    output:
+        expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.selected.gtf", transcriptome=config["reference"]["filename"])
+    params:
+        transcriptlist="results/trinotate/transcripts_with_annotation.txt"
+    shell:
+        """
+        python {input.script} {params.transcriptlist} {input.gtf} results/reference
+        """

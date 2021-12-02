@@ -17,7 +17,9 @@ rule all:
         expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["filename"]),
         expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
         expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf",transcriptome=config["reference"]["filename"]),
-        expand("results/cellranger/counts/{species}", species=config["species"]),
-        "results/mitofinder",
+        # expand("results/cellranger/counts/{species}", species=config["species"]),
+        # "results/mitofinder",
         "results/trinotate/trinotate_annotation_report.xls",
-        "results/trinotate/go_annotations.txt"
+        "results/trinotate/go_annotations.txt",
+        expand("results/reference/{transcriptome}_longestORFperGene.selected.fasta", transcriptome=config["reference"]["filename"]),
+        expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.selected.gtf", transcriptome=config["reference"]["filename"])
