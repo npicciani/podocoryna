@@ -52,7 +52,7 @@ rule cellranger_count_selected:
         """
         cd results/cellranger/counts-selected
         cellranger count --id={params.species} \
-                         --transcriptome=../reference \
+                         --transcriptome=../reference-selected \
                          --fastqs=../../../resources/rawdata \
                          --expect-cells=10000 \
                          --localcores={threads} \
