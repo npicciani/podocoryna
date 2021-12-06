@@ -31,21 +31,21 @@ rule keep_longest_ORF_per_gene:
         "python {input.script} -p {input.longestORFs} -t "
         "{input.transcriptomePath} -identifier {params.geneID_type} -o results/reference"
 
-rule make_GTF:
-    input:
-        nucleotides=expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
-        peptides=expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["filename"]),
-        script="workflow/scripts/makeGTF_emapper.py"
-    output:
-        expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf", transcriptome=config["reference"]["filename"]),
-        expand("results/reference/{transcriptome}_longestORFperGene.fasta.geneID_to_transcript.txt", transcriptome=config["reference"]["filename"])
-    threads: 15
-    params:
-        time="3:00:00",
-        mem="50GB",
-        geneID_type=config["geneIDType"]
-    shell:
-        "python {input.script} {input.nucleotides} {input.peptides} {params.geneID_type} results/reference"
+# rule make_GTF:
+#     input:
+#         nucleotides=expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
+#         peptides=expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["filename"]),
+#         script="workflow/scripts/makeGTF_emapper.py"
+#     output:
+#         expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf", transcriptome=config["reference"]["filename"]),
+#         expand("results/reference/{transcriptome}_longestORFperGene.fasta.geneID_to_transcript.txt", transcriptome=config["reference"]["filename"])
+#     threads: 15
+#     params:
+#         time="3:00:00",
+#         mem="50GB",
+#         geneID_type=config["geneIDType"]
+#     shell:
+#         "python {input.script} {input.nucleotides} {input.peptides} {params.geneID_type} results/reference"
 
 rule get_mitochondrial_genes:
     input:
@@ -70,7 +70,7 @@ rule get_annotated_transcripts:
         expand("results/reference/{transcriptome}_longestORFperGene.selected.fasta", transcriptome=config["reference"]["filename"])
     threads: 20
     params:
-        transcriptlist="results/trinotate/transcripts_with_annotation.txt"
+        transcriptlist="results/trinotate/transcripts_with_annotation_nodupes.txt"
     shell:
         """
         python {input.script} {params.transcriptlist} {input.nucleotides} results/reference

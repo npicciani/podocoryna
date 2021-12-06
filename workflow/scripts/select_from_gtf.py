@@ -30,7 +30,9 @@ else:
 
     gtfname = PurePosixPath(gtffile).stem
     gtf = pd.read_table(gtffile, header=None)
-    newgtf = outputDir + "/" + gtfname + ".selected.gtf"
+    newgtfFile = outputDir + "/" + gtfname + ".selected.gtf"
+
+    # newgtf = gtf[gtf[0].isin(querylist)] # could also use this easy one liner
 
     for name in gtf[0]:  # for transcript name in the first column of gtf file
         if (
@@ -44,5 +46,5 @@ else:
             )  # drop that row and modify the actual file
 
     gtf.to_csv(
-        newgtf, sep="\t", quoting=3, header=False, index=False
+        newgtfFile, sep="\t", quoting=3, header=False, index=False
     )  # quoting=3 is the same as quoting=csv.QUOTE_NONE

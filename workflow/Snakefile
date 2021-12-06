@@ -5,7 +5,7 @@ min_version("6.4.1")
 configfile: "config/config.yaml"
 
 # load rules
-# include: "rules/reference.smk"
+include: "rules/reference.smk"
 include: "rules/cellranger.smk"
 # include: "rules/trinotate.smk"
 # include: "rules/stats.smk"
@@ -17,10 +17,10 @@ rule all:
         # expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["filename"]),
         # expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
         # expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf",transcriptome=config["reference"]["filename"]),
-        expand("results/cellranger/counts/{species}", species=config["species"]),
+        # expand("results/cellranger/counts/{species}", species=config["species"]),
         expand("results/cellranger/counts-selected/{species}", species=config["species"]),
         # "results/mitofinder",
         # "results/trinotate/trinotate_annotation_report.xls",
         # "results/trinotate/go_annotations.txt",
-        # expand("results/reference/{transcriptome}_longestORFperGene.selected.fasta", transcriptome=config["reference"]["filename"]),
+        expand("results/reference/{transcriptome}_longestORFperGene.selected.fasta", transcriptome=config["reference"]["filename"]),
         # expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.selected.gtf", transcriptome=config["reference"]["filename"])
