@@ -76,14 +76,27 @@ rule get_annotated_transcripts:
         python {input.script} {params.transcriptlist} {input.nucleotides} results/reference
         """
 
-rule select_from_gtf:
+# rule select_from_gtf:
+#     input:
+#         gtf=expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf", transcriptome=config["reference"]["filename"]),
+#         script="workflow/scripts/select_from_gtf.py"
+#     output:
+#         expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.selected.gtf", transcriptome=config["reference"]["filename"])
+#     params:
+#         transcriptlist="results/trinotate/transcripts_with_annotation.txt"
+#     shell:
+#         """
+#         python {input.script} {params.transcriptlist} {input.gtf} results/reference
+#         """
+
+rule select_from_gtf_all_positives:
     input:
         gtf=expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf", transcriptome=config["reference"]["filename"]),
         script="workflow/scripts/select_from_gtf.py"
     output:
         expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.selected.gtf", transcriptome=config["reference"]["filename"])
     params:
-        transcriptlist="results/trinotate/transcripts_with_annotation.txt"
+        transcriptlist="results/reference/trinotate_annotate_only_transcript_ids.csv"
     shell:
         """
         python {input.script} {params.transcriptlist} {input.gtf} results/reference

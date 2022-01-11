@@ -58,3 +58,32 @@ rule cellranger_count_selected:
                          --localcores={threads} \
                          --localmem=64
         """
+
+rule cellranger_mkref_selected_annotated:
+    input:
+        fasta=expand("results/reference/{transcriptome}_longestORFperGene.allpositive.selected.fasta", transcriptome=config["reference"]["filename"]),
+        gtf=expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.selected.gtf", transcriptome=config["reference"]["filename"])
+    output:
+        directory("results/cellranger/reference-selected-annotated")
+    threads: 8
+    shell:
+        "cd results/cellranger && cellranger mkref --genome=reference-selected-annotated --fasta=../../{input.fasta} --genes=../../{input.gtf}"
+
+rule cellranger_count_selected_annotated:
+    input:
+        "results/cellranger/reference-selected-annotated"
+    output:
+        directory(expand("results/cellranger/counts-selected-annotated/{species}", species=config["species"]))
+    threads: 8
+    params:
+        species=config["species"]
+    shell:
+        """
+        cd results/cellranger/counts-selected-annotated
+        cellranger count --id={params.species} \
+                         --transcriptome=../reference-selected-annotated \
+                         --fastqs=../../../resources/rawdata \
+                         --expect-cells=10000 \
+                         --localcores={threads} \
+                         --localmem=64
+        """
