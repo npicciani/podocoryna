@@ -1,31 +1,63 @@
-rule cellranger_mkref_original:
+# rule cellranger_mkref_original:
+#     """
+#     Make reference using cell ranger and the original processed transcriptome file
+#     """
+#     input:
+#         fasta=expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
+#         gtf=expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf", transcriptome=config["reference"]["filename"])
+#     output:
+#         directory("results/cellranger/reference")
+#     threads: 8
+#     shell:
+#         "cd results/cellranger && cellranger mkref --genome=reference --fasta=../../{input.fasta} --genes=../../{input.gtf}"
+
+# rule cellranger_count_original:
+#     input:
+#         "results/cellranger/reference"
+#     output:
+#         directory(expand("results/cellranger/counts/{species}", species=config["species"]))
+#     threads: 8
+#     params:
+#         species=config["species"]
+#     shell:
+#         """
+#         cd results/cellranger/counts
+#         cellranger count --id={params.species} \
+#                          --transcriptome=../reference \
+#                          --fastqs=../../../resources/rawdata \
+#                          --expect-cells=10000 \
+#                          --localcores={threads} \
+#                          --localmem=64
+#         """
+
+rule cellranger_mkref_isoseq:
     """
     Make reference using cell ranger and the original processed transcriptome file
     """
     input:
-        fasta=expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
-        gtf=expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf", transcriptome=config["reference"]["filename"])
+        fasta=expand("results/reference-isoseq/{transcriptome}.fasta", transcriptome=config["reference"]["filename"]),
+        gtf=expand("results/reference-isoseq/{transcriptome}.fasta.eggnog.gtf", transcriptome=config["reference"]["filename"])
     output:
-        directory("results/cellranger/reference")
+        directory("results/cellranger-isoseq/reference")
     threads: 8
     shell:
-        "cd results/cellranger && cellranger mkref --genome=reference --fasta=../../{input.fasta} --genes=../../{input.gtf}"
+        "cd results/cellranger-isoseq && cellranger mkref --genome=reference --fasta=../../{input.fasta} --genes=../../{input.gtf}"
 
-rule cellranger_count_original:
+rule cellranger_count_isoseq:
     input:
-        "results/cellranger/reference"
+        "results/cellranger-isoseq/reference"
     output:
-        directory(expand("results/cellranger/counts/{species}", species=config["species"]))
+        directory(expand("results/cellranger-isoseq/counts/{species}", species=config["species"]))
     threads: 8
     params:
         species=config["species"]
     shell:
         """
-        cd results/cellranger/counts
+        cd results/cellranger-isoseq/counts
         cellranger count --id={params.species} \
                          --transcriptome=../reference \
                          --fastqs=../../../resources/rawdata \
-                         --expect-cells=10000 \
+                         --force-cells=8000 \
                          --localcores={threads} \
                          --localmem=64
         """

@@ -3,12 +3,18 @@ species: podocoryna_carnea
 # Path to accession numbers and links for public data download
 targets: config/download_targets.tsv
 
-reference:
-  path: resources/Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest.fasta
-  filename: Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest.fasta
-  fileStem: Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest
+# reference:
+#   path: resources/Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest.fasta
+#   filename: Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest.fasta
+#   fileStem: Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest
 
-geneIDType: type_2 #the type of gene identifier; type_1 = "compXX_cXX_seqXX", type_2="TRINITY_DNXXXXX_cX_gX_iX", type_3="SegXX.XX.XXXX"; rule keep_longest_ORF_per_gene and rule make_GTF
+reference:
+  path: resources/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta
+  filename: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta
+  fileStem: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200
+
+# For rules 'keep_longest_ORF_per_gene' and 'make_GTF'
+geneIDType: type_2 #the type of gene identifier; type_1 = "compXX_cXX_seqXX", type_2="TRINITY_DNXXXXX_cX_gX_iX", type_3="SegXX.XX.XXXX"
 
 # Install according to https://github.com/Trinotate/Trinotate.github.io/wiki/Software-installation-and-data-required
 rnammer: ~/local/bin/rnammer-1.2/rnammer # path to rnammer

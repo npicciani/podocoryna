@@ -5,7 +5,7 @@ min_version("6.4.1")
 configfile: "config/config.yaml"
 
 # load rules
-include: "rules/reference.smk"
+# include: "rules/reference.smk"
 include: "rules/cellranger.smk"
 include: "rules/trinotate.smk"
 include: "rules/stats.smk"
@@ -16,15 +16,15 @@ include: "rules/data.smk"
 # target rule
 rule all:
     input:
-        expand("results/reference/{transcriptome}.transdecoder_dir/longest_orfs.pep", transcriptome=config["reference"]["filename"]),
-        expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["filename"]),
-        expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
-        expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf",transcriptome=config["reference"]["filename"]),
-        expand("results/cellranger/counts/{species}", species=config["species"]),
-        "results/mitofinder",
-        "results/trinotate/trinotate_annotation_report.xls",
-        "results/trinotate/go_annotations.txt",
-        expand("resources/sequences/ensembl/{species}.fasta.gz",species=ensembl_targets.loc[:,"species"]),
-		expand("resources/sequences/tsa/{species}.fasta.gz",species=tsa_targets.loc[:,"species"]),
-		expand("resources/sequences/gdrive/{species}.pep.fasta",species=gdrive_targets.loc[:,"species"]),
-		expand("resources/sequences/other/{species}/{filename}",zip, species= other_targets.loc[:,"species"],filename=other_targets.loc[:,"filename"])
+        # expand("results/reference/{transcriptome}.transdecoder_dir/longest_orfs.pep", transcriptome=config["reference"]["filename"]),
+        # expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["filename"]),
+        # expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
+        # expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf",transcriptome=config["reference"]["filename"]),
+        expand("results/cellranger-isoseq/counts/{species}", species=config["species"]),
+        # "results/mitofinder",
+        "results/trinotate-isoseq/trinotate_annotation_report.xls",
+        "results/trinotate-isoseq/go_annotations.txt",
+        # expand("resources/sequences/ensembl/{species}.fasta.gz",species=ensembl_targets.loc[:,"species"]),
+		# expand("resources/sequences/tsa/{species}.fasta.gz",species=tsa_targets.loc[:,"species"]),
+		# expand("resources/sequences/gdrive/{species}.pep.fasta",species=gdrive_targets.loc[:,"species"]),
+		# expand("resources/sequences/other/{species}/{filename}",zip, species= other_targets.loc[:,"species"],filename=other_targets.loc[:,"filename"])
