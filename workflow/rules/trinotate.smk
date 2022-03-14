@@ -13,7 +13,7 @@ rule trinotate_dbs:
         """
         # Build databases
         mkdir results/trinotate
-        perl {params.sqlite} results/trinotate/Trinotate
+        perl {params.sqlite} results/trinotate/Trinotate # make boilerplate sqlite database
         mv uniprot_sprot.* results/trinotate
         mv Pfam-A.hmm.gz results/trinotate
 

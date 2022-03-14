@@ -5,26 +5,26 @@ min_version("6.4.1")
 configfile: "config/config.yaml"
 
 # load rules
-# include: "rules/reference.smk"
-# include: "rules/cellranger.smk"
-# include: "rules/trinotate.smk"
-include: "rules/blastx.smk"
-# include: "rules/stats.smk"
+include: "rules/reference.smk"
+include: "rules/cellranger.smk"
+include: "rules/trinotate.smk"
+include: "rules/stats.smk"
+include: "rules/data.smk"
+# include: "rules/orthologues.smk"
+
 
 # target rule
 rule all:
     input:
-        # expand("results/reference/{transcriptome}.transdecoder_dir/longest_orfs.pep", transcriptome=config["reference"]["filename"]),
-        # expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["filename"]),
-        # expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
-        # expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf",transcriptome=config["reference"]["filename"]),
-        # expand("results/cellranger/counts/{species}", species=config["species"]),
-        # expand("results/cellranger/counts-selected/{species}", species=config["species"]),
-        # expand("results/cellranger/counts-selected-annotated/{species}", species=config["species"]),
-        # "results/mitofinder",
-        # "results/trinotate/trinotate_annotation_report.xls",
-        # "results/trinotate/go_annotations.txt",
-        # expand("results/reference/{transcriptome}_longestORFperGene.selected.fasta", transcriptome=config["reference"]["filename"]),
-        # expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.selected.gtf", transcriptome=config["reference"]["filename"]),
-        "results/blastx/blastx.outfmt6",
-        "results/blastx/uniprot-taxonomy%3A6073.fasta.psq",
+        expand("results/reference/{transcriptome}.transdecoder_dir/longest_orfs.pep", transcriptome=config["reference"]["filename"]),
+        expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["filename"]),
+        expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
+        expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf",transcriptome=config["reference"]["filename"]),
+        expand("results/cellranger/counts/{species}", species=config["species"]),
+        "results/mitofinder",
+        "results/trinotate/trinotate_annotation_report.xls",
+        "results/trinotate/go_annotations.txt",
+        expand("resources/sequences/ensembl/{species}.fasta.gz",species=ensembl_targets.loc[:,"species"]),
+		expand("resources/sequences/tsa/{species}.fasta.gz",species=tsa_targets.loc[:,"species"]),
+		expand("resources/sequences/gdrive/{species}.pep.fasta",species=gdrive_targets.loc[:,"species"]),
+		expand("resources/sequences/other/{species}/{filename}",zip, species= other_targets.loc[:,"species"],filename=other_targets.loc[:,"filename"])
