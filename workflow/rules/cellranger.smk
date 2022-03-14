@@ -35,8 +35,8 @@ rule cellranger_mkref_isoseq:
     Make reference using cell ranger and the original processed transcriptome file
     """
     input:
-        fasta=expand("results/reference-isoseq/{transcriptome}.fasta", transcriptome=config["reference"]["filename"]),
-        gtf=expand("results/reference-isoseq/{transcriptome}.fasta.eggnog.gtf", transcriptome=config["reference"]["filename"])
+        fasta=expand("resources/{transcriptome}.fasta", transcriptome=config["reference"]["fileStem"]),
+        gtf=expand("results/reference-isoseq/{transcriptome}.fasta.eggnog.gtf", transcriptome=config["reference"]["fileStem"])
     output:
         directory("results/cellranger-isoseq/reference")
     threads: 8
