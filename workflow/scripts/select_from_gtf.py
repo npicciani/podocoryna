@@ -5,7 +5,7 @@
 Created on Dec 2, 2021
 by Natasha Picciani
 Python 3.7
-usage: select_from_gtf.py [transcriptlist] [gtf] [outdir]
+usage: select_from_gtf.py [transcriptlist] [gtf] [prefix] [outdir]
 
 """
 
@@ -20,7 +20,8 @@ if len(sys.argv) < 2:
 else:
     transcriptList = sys.argv[1]
     gtffile = sys.argv[2]
-    outputDir = sys.argv[3]
+    prefix = sys.argv[3]
+    outputDir = sys.argv[4]
 
     querylist = []
     with open(transcriptList, "r") as file:
@@ -30,7 +31,7 @@ else:
 
     gtfname = PurePosixPath(gtffile).stem
     gtf = pd.read_table(gtffile, header=None)
-    newgtfFile = outputDir + "/" + gtfname + ".selected.gtf"
+    newgtfFile = outputDir + "/" + gtfname + ".selected." + prefix + ".gtf"
 
     # newgtf = gtf[gtf[0].isin(querylist)] # could also use this easy one liner
 
