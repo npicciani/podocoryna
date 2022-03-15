@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH --time=5:00:00
+#SBATCH --job-name=isoseq-gtf_transdecoder
+#SBATCH --nodes=1 --ntasks-per-node=8                    # number of cores and nodes
+#SBATCH --mem=30GB                  # memory pool for all cores
+#SBATCH --output=/home/nnp9/project/podocoryna/development/isoseq-gtf_transdecoder.out          # STDOUT
+#SBATCH --error=/home/nnp9/project/podocoryna/development/isoseq-gtf_transdecoder.err          # STDERR
+
+TRANSCRIPTOME=/home/nnp9/project/podocoryna/resources/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta
+OUTDIR=/home/nnp9/project/podocoryna/results/reference-isoseq/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.transdecoder_dir
+
+# Run transdecoder
+module load miniconda
+conda activate transdecoder
+
+TransDecoder.LongOrfs -t $TRANSCRIPTOME --output_dir $OUTDIR

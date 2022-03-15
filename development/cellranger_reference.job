@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --time=1:00:00
+#SBATCH --job-name=cellranger
+#SBATCH --nodes=1 --ntasks-per-node=8                    # number of cores and nodes
+#SBATCH --mem=20GB                  # memory pool for all cores
+#SBATCH --output=/home/nnp9/project/podocoryna/development/cellranger_reference.out          # STDOUT
+#SBATCH --error=/home/nnp9/project/podocoryna/development/cellranger_reference.err          # STDERR
+
+REFERENCE="/home/nnp9/project/podocoryna/resources/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta"
+GTF="/home/nnp9/project/podocoryna/results/reference-isoseq/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta.eggnog.gtf"
+
+cd /home/nnp9/project/podocoryna/results/cellranger-isoseq
+cellranger mkref --genome=reference --fasta=$REFERENCE --genes=$GTF
