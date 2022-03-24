@@ -10,7 +10,7 @@ include: "rules/cellranger.smk"
 include: "rules/trinotate.smk"
 include: "rules/stats.smk"
 include: "rules/get_data.smk"
-# include: "rules/orthologues.smk"
+include: "rules/orthologues.smk"
 
 
 # target rule
@@ -24,8 +24,5 @@ rule all:
         # "results/mitofinder",
         # "results/trinotate-isoseq/trinotate_annotation_report.xls",
         # "results/trinotate-isoseq/go_annotations.txt",
-		expand("resources/sequences/ensembl/{species}.pep.fasta.gz",species=ensembl_targets.loc[:,"species"]),
-		expand("resources/sequences/ensemblgenomes/{species}.pep.fasta.gz",species=ensemblgenomes_targets.loc[:,"species"]),
-		expand("resources/sequences/gdrive/{species}.pep.fasta",species=gdrive_targets.loc[:,"species"]),
-		expand("resources/sequences/other/{species}.pep.fasta",species=other_targets.loc[:,"species"]),
-		expand("resources/sequences/other_gz/{species}.pep.fasta.gz",species=other_gz_targets.loc[:,"species"])
+		expand("resources/sequences/{species}.pep.fasta", species=targets.index),
+		"results/orthofinder"
