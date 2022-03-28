@@ -7,6 +7,9 @@ rule gunzip:
 		expand("resources/sequences/other_gz/{species}.pep.fasta.gz",species=other_gz_targets.loc[:,"species"])
 	output:
 		expand("resources/sequences/{species}.pep.fasta", species=targets.index)
+	params:
+		referencePeptides=expand("results/reference-isoseq/{transcriptome}.transdecoder_dir/longest_orfs.pep", transcriptome=config["reference"]["fileStem"]),
+		link=expand("resources/sequences/{species}.pep.fasta", species=config["reference"]["species"])
 	shell:
 		"""
 		dir="resources/sequences"
@@ -20,6 +23,8 @@ rule gunzip:
 		done
 		subdirs=`ls -d $dir/*/`
 		rm -R $subdirs
+
+		ln -s {params.referencePeptides} {params.link}
 		"""
 
 rule orthofinder:
@@ -34,3 +39,6 @@ rule orthofinder:
     threads: 20
     shell:
         "orthofinder -f {input} -t {threads} -o {output}"
+
+# Provide species tree to orthofinder
+# Include symbolic link to Podocoryna peptides
