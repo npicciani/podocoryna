@@ -5,27 +5,6 @@ from src.treeinform_collapse import load_trees
 import matplotlib.pyplot as plt
 
 
-def is_ultrametric(tree):
-    """
-    https://www.biostars.org/p/297625/
-    """
-    last_distance = None
-    distance = 0
-    for post, node in tree.iter_prepostorder():
-        if post:
-            distance -= node.dist
-        else:
-            if not node.is_leaf():
-                distance += node.dist
-            else:
-                if last_distance is None:
-                    print(last_distance)
-                    last_distance = distance + node.dist
-                elif last_distance != distance + node.dist:
-                    return False, last_distance
-    return True, last_distance
-
-
 def branch_length_histogram(newicks):
     """
     # Agalma - an automated phylogenomics workflow
@@ -47,8 +26,6 @@ def branch_length_histogram(newicks):
         tree.convert_to_ultrametric(
             tree_length=1
         )  # converts tree to ultrametric with length 1
-        if is_ultrametric(tree) == False:
-            print("tree is not ultrametric")
         for node in tree.traverse(strategy="postorder"):
             if node.is_leaf():
                 node.add_feature("branchlength", 0)
