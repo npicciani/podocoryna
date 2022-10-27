@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH --time=50:00:00
+#SBATCH --job-name=Treeinform-collapse
+#SBATCH --nodes=1 --ntasks-per-node=12                    # number of cores and nodes
+#SBATCH --mem=50GB                  # memory pool for all cores
+#SBATCH --output=/home/nnp9/scratch60/podocoryna/slurmfiles/05_treeinform-collapse.out          # STDOUT
+#SBATCH --error=/home/nnp9/scratch60/podocoryna/slurmfiles/05_treeinform-collapse.err          # STDERR
+
+GENETREES=/home/nnp9/scratch60/podocoryna/results/orthofinder_oct17_repeat/Results_Oct17/Gene_Trees
+PODOSEQ=/home/nnp9/scratch60/podocoryna/resources/sequences/Podocoryna_carnea.pep.fasta
+OUTDIR=/home/nnp9/scratch60/podocoryna/results/treeinform
+SCRIPTS=/home/nnp9/scratch60/podocoryna/scripts
+
+
+# mkdir $OUTDIR
+python $SCRIPTS/treeinform_collapse.py -s $PODOSEQ -gt $GENETREES -t 0.05 -sp Podocoryna_carnea -o $OUTDIR

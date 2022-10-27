@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 import ete3
-from treeinform_collapse import load_trees
+from src.treeinform_collapse import load_trees
 import matplotlib.pyplot as plt
 
 
