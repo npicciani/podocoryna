@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import argparse
 import ete3
-import re
 import os
 import operator
 from collections import defaultdict
@@ -96,59 +95,6 @@ def identify_candidate_variants(newicks, threshold, species_of_interest):
                     # yield (candidates[species_of_interest])
                     candidates_specific.append(candidates[species_of_interest])
     return candidates_specific
-
-
-def branch_length_histogram(newicks):
-    """
-    # Agalma - an automated phylogenomics workflow
-    # Copyright (c) 2012-2017 Brown University. All rights reserved.
-    # Modified by Natasha Picciani on Oct 18
-
-    Distribution of subtree branch lengths. Returns a dictionary
-    containing subtree lengths and corresponding counts.
-
-    Args:
-    -- newicks: list containing the absolute paths to tree files
-    """
-    hist = {}
-    for newick in newicks:
-        tree = ete3.Tree(newick)
-        outgroup = tree.get_midpoint_outgroup()
-        if not outgroup is None:
-            tree.set_outgroup(outgroup)
-        for node in tree.traverse(strategy="postorder"):
-            if node.is_leaf():
-                node.add_feature("branchlength", 0)
-                node.add_feature("under", True)
-            if not node.is_leaf():
-                children = node.get_children()
-                branchlength = (
-                    children[0].get_distance(children[1])
-                    + children[0].branchlength
-                    + children[1].branchlength
-                )
-                node.add_feature("branchlength", branchlength)
-                hist[branchlength] = hist.get(branchlength, 0) + 1
-    return hist
-
-
-def plot_histogram(histogram, outdir):
-    """ "
-    Plot distribution of subtree lengths.
-    Returns png image with a histogram of the distribution.
-
-    Args:
-    -- histogram: dictionary containing subtree lengths and corresponding counts.
-    -- outdir: output directory for image file named 'branch.length.hist.png'.
-    """
-
-    figname = f"{outdir}/branch.length.hist.png"
-    plt.hist(histogram, bins=10000, edgecolor="k")
-    plt.xlabel("Branch Length")
-    plt.ylabel("Frequency")
-    plt.title("Distribution of Subtree Branch Lengths")
-    plt.axis([0, 1, 0, 500])
-    plt.savefig(figname, facecolor="white")
 
 
 def create_protein_length_dictionary(peptides):
@@ -267,8 +213,6 @@ def main(args):
         trees, threshold_value, species_of_interest
     )
     export_variants(candidate_variants, species_of_interest, outdir_name)
-    histogram = branch_length_histogram(trees)
-    plot_histogram(histogram, outdir_name)
     new_protein_lengths = fix_special_characters(
         create_protein_length_dictionary(protein_file)
     )
@@ -320,7 +264,7 @@ if __name__ == "__main__":
         type=float,
         required=True,
         default="0.05",
-        help="type of gene identifier in the ORF FASTA file",
+        help="subtree length value under which sequences are considered variants",
     )
     parser.add_argument(
         "-o", "-outdir", type=str, required=False, default=".", help="output directory"
