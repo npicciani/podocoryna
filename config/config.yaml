@@ -9,12 +9,13 @@ targets: config/download_targets.tsv
 #   fileStem: Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest
 
 reference:
-  path: resources/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta
-  filename: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta
+  path: resources/isoseq-ref/cogent/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta.selected
+  filename: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta.selected
   fileStem: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200
+  partitionFile: resources/isoseq-ref/cogent/final.partition.txt
 
 # For rules 'keep_longest_ORF_per_gene' and 'make_GTF'
-geneIDType: type_2 #the type of gene identifier; type_1 = "compXX_cXX_seqXX", type_2="TRINITY_DNXXXXX_cX_gX_iX", type_3="SegXX.XX.XXXX"
+geneIDType: type_5 #the type of gene identifier; type_1 = "compXX_cXX_seqXX", type_2="TRINITY_DNXXXXX_cX_gX_iX", type_3="SegXX.XX.XXXX"
 
 # Install according to https://github.com/Trinotate/Trinotate.github.io/wiki/Software-installation-and-data-required
 rnammer: ~/local/bin/rnammer-1.2/rnammer # path to rnammer
