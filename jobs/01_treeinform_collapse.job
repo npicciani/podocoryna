@@ -3,14 +3,24 @@
 #SBATCH --job-name=Treeinform-collapse
 #SBATCH --nodes=1 --ntasks-per-node=12                    # number of cores and nodes
 #SBATCH --mem=50GB                  # memory pool for all cores
-#SBATCH --output=/home/nnp9/scratch60/podocoryna/slurmfiles/05_treeinform-collapse.out          # STDOUT
-#SBATCH --error=/home/nnp9/scratch60/podocoryna/slurmfiles/05_treeinform-collapse.err          # STDERR
+#SBATCH --output=/home/nnp9/scratch60/podocoryna/slurmfiles/01_treeinform-collapse.out          # STDOUT
+#SBATCH --error=/home/nnp9/scratch60/podocoryna/slurmfiles/01_treeinform-collapse.err          # STDERR
 
 GENETREES=/home/nnp9/scratch60/podocoryna/results/orthofinder_oct17_repeat/Results_Oct17/Gene_Trees
 PODOSEQ=/home/nnp9/scratch60/podocoryna/resources/sequences/Podocoryna_carnea.pep.fasta
-OUTDIR=/home/nnp9/scratch60/podocoryna/results/treeinform
-SCRIPTS=/home/nnp9/scratch60/podocoryna/scripts
+OUTDIR1=/home/nnp9/scratch60/podocoryna/results/treeinform/threshold_0.5
+OUTDIR2=/home/nnp9/scratch60/podocoryna/results/treeinform/threshold_1
+OUTDIR3=/home/nnp9/scratch60/podocoryna/results/treeinform/threshold_2
+OUTDIR4=/home/nnp9/scratch60/podocoryna/results/treeinform/threshold_3
+OUTDIR5=/home/nnp9/scratch60/podocoryna/results/treeinform/threshold_4
+OUTDIR6=/home/nnp9/scratch60/podocoryna/results/treeinform/threshold_5
+SCRIPTS=/home/nnp9/project/podocoryna/workflow/scripts
 
 
-# mkdir $OUTDIR
-python $SCRIPTS/treeinform_collapse.py -s $PODOSEQ -gt $GENETREES -t 0.05 -sp Podocoryna_carnea -o $OUTDIR
+mkdir $OUTDIR1 $OUTDIR2 $OUTDIR3 $OUTDIR4 $OUTDIR5 $OUTDIR6
+python $SCRIPTS/treeinform_collapse.py -s $PODOSEQ -gt $GENETREES -t 0.05 -sp Podocoryna_carnea -o $OUTDIR1
+python $SCRIPTS/treeinform_collapse.py -s $PODOSEQ -gt $GENETREES -t 1 -sp Podocoryna_carnea -o $OUTDIR2
+python $SCRIPTS/treeinform_collapse.py -s $PODOSEQ -gt $GENETREES -t 2 -sp Podocoryna_carnea -o $OUTDIR3
+python $SCRIPTS/treeinform_collapse.py -s $PODOSEQ -gt $GENETREES -t 3 -sp Podocoryna_carnea -o $OUTDIR4
+python $SCRIPTS/treeinform_collapse.py -s $PODOSEQ -gt $GENETREES -t 4 -sp Podocoryna_carnea -o $OUTDIR5
+python $SCRIPTS/treeinform_collapse.py -s $PODOSEQ -gt $GENETREES -t 5 -sp Podocoryna_carnea -o $OUTDIR6

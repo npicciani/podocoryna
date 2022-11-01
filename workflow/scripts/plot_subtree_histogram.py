@@ -1,8 +1,29 @@
 # -*- coding: utf-8 -*-
 import argparse
 import ete3
-from src.treeinform_collapse import load_trees
+import os
+
+# from src.treeinform_collapse import load_trees
 import matplotlib.pyplot as plt
+
+
+def load_trees(gene_trees_folder):
+    """
+    Load tree paths from folder with gene trees.
+    Returns a list with paths to each gene tree.
+
+    Args:
+    -- gene_trees_folder: path to folder with gene trees in newick format.
+
+    """
+
+    trees = []
+    for path in os.listdir(gene_trees_folder):
+        tree_path = os.path.join(gene_trees_folder, path)
+        if os.path.isfile(tree_path):
+            trees.append(tree_path)
+    assert len(trees) != 0
+    return trees
 
 
 def branch_length_histogram(newicks):
@@ -23,9 +44,9 @@ def branch_length_histogram(newicks):
         outgroup = tree.get_midpoint_outgroup()
         if not outgroup is None:
             tree.set_outgroup(outgroup)
-        tree.convert_to_ultrametric(
-            tree_length=1
-        )  # converts tree to ultrametric with length 1
+        # tree.convert_to_ultrametric(
+        #     tree_length=1
+        # ) # converts tree to ultrametric with length 1
         for node in tree.traverse(strategy="postorder"):
             if node.is_leaf():
                 node.add_feature("branchlength", 0)
@@ -52,12 +73,12 @@ def plot_histogram(histogram, binsize, threshold_value, outdir):
     -- outdir: output directory for image file named 'branch.length.hist.png'.
     """
 
-    figname = f"{outdir}/branch.length.hist.png"
+    figname = f"{outdir}/branch.length.hist_{threshold_value}.png"
     plt.hist(histogram, bins=binsize, edgecolor="k")
     plt.xlabel("Branch Length")
     plt.ylabel("Frequency")
     plt.title("Distribution of Subtree Branch Lengths")
-    plt.axis([0, 20, 0, 1000])
+    plt.axis([0, 30, 0, 20000])
     plt.axvline(threshold_value, color="red")
     plt.savefig(figname, facecolor="white")
 
