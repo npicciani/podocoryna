@@ -1,0 +1,10 @@
+#!/bin/bash
+
+##conda activate snakemake
+
+TRANSCRIPTOME=/home/nnp9/project/podocoryna/resources/isoseq/cogent_bysally/Male_Med.Cogent.hq_transcripts.fasta.no5merge.collapsed.filtered.rep.fa
+COLLAPSED_PROTEINS=/home/nnp9/scratch60/podocoryna/results/treeinform/threshold_4/Podocoryna_carnea.collapsed.fasta
+
+cd /home/nnp9/project/podocoryna/workflow/scripts
+
+python pull_transcripts.py $TRANSCRIPTOME $COLLAPSED_PROTEINS
