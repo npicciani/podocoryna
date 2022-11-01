@@ -1,0 +1,17 @@
+#!/bin/bash
+#SBATCH --time=7:00:00
+#SBATCH --job-name=cellranger
+#SBATCH --nodes=1 --ntasks-per-node=8                    # number of cores and nodes
+#SBATCH --mem=20GB                  # memory pool for all cores
+#SBATCH --output=/home/nnp9/scratch60/podocoryna/slurmfiles/30_cellranger_count.out          # STDOUT
+#SBATCH --error=/home/nnp9/scratch60/podocoryna/slurmfiles/30_cellranger_count.err          # STDERR
+
+TRANSCRIPTOME=/home/nnp9/scratch60/podocoryna/results/treeinform/threshold_1/reference
+FASTQS=/home/nnp9/scratch60/podocoryna/rawdata/Podo4
+
+cd /home/nnp9/scratch60/podocoryna/results/treeinform/threshold_1/
+cellranger count --id=Podo4 \
+                    --transcriptome=$TRANSCRIPTOME \
+                    --fastqs=$FASTQS \
+                    --localcores=8 \
+                    --localmem=64

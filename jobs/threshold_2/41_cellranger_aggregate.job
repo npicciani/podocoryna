@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --time=10:00:00
+#SBATCH --job-name=cellranger
+#SBATCH --nodes=1 --ntasks-per-node=8                    # number of cores and nodes
+#SBATCH --mem=20GB                  # memory pool for all cores
+#SBATCH --output=/home/nnp9/scratch60/podocoryna/slurmfiles/41_cellranger_aggregate.out          # STDOUT
+#SBATCH --error=/home/nnp9/scratch60/podocoryna/slurmfiles/41_cellranger_aggregate.err          # STDERR
+
+CSV="/home/nnp9/scratch60/podocoryna/resources/Podo1-5.csv"
+
+cd /home/nnp9/scratch60/podocoryna/results/treeinform/threshold_2/aggregate
+cellranger aggr --id=Podo1-5 \
+				--csv=$CSV

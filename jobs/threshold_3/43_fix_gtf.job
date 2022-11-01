@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --time=1:00:00
+#SBATCH --job-name=fix_gtf
+#SBATCH --nodes=1 --ntasks-per-node=8                    # number of cores and nodes
+#SBATCH --mem=20GB                  # memory pool for all cores
+#SBATCH --output=/home/nnp9/scratch60/podocoryna/slurmfiles/43_fix_gtf.out          # STDOUT
+#SBATCH --error=/home/nnp9/scratch60/podocoryna/slurmfiles/43_fix_gtf.err          # STDERR
+
+##conda activate snakemake
+# TRANSCRIPTOME=/home/nnp9/project/podocoryna/resources/isoseq/cogent_bysally/Male_Med.Cogent.hq_transcripts.fasta.no5merge.collapsed.filtered.rep.fa
+# ORIGINAL_GFF=/home/nnp9/project/podocoryna/resources/isoseq/cogent_bysally/Male_Med.Cogent.hq_transcripts.fasta.no5merge.collapsed.filtered.gff
+SCRIPTS=/home/nnp9/project/podocoryna/workflow/scripts
+
+# python $SCRIPTS/fix_gtf.py $TRANSCRIPTOME $ORIGINAL_GFF
+
+LIST_OF_TRANSCRIPTS=/home/nnp9/scratch60/podocoryna/results/treeinform/threshold_3/Podocoryna_carnea.collapsed.fasta.transcripts.collapsed.list.txt
+FIXED_GFF=/home/nnp9/project/podocoryna/resources/isoseq/cogent_bysally/Male_Med.Cogent.hq_transcripts.fasta.no5merge.collapsed.filtered.gff.fixed.gff
+OUTDIR=/home/nnp9/scratch60/podocoryna/results/treeinform/threshold_3
+
+python $SCRIPTS/select_from_gtf.py $LIST_OF_TRANSCRIPTS $FIXED_GFF $OUTDIR
