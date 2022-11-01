@@ -7,4 +7,7 @@ COLLAPSED_PROTEINS=/home/nnp9/scratch60/podocoryna/results/treeinform/threshold_
 
 cd /home/nnp9/project/podocoryna/workflow/scripts
 
+## Generates 2 outputs:
+# outfile = f"{collapsed_protein_file}.transcripts.collapsed.fasta"
+# outfile2 = f"{collapsed_protein_file}.transcripts.collapsed.list.txt"
 python pull_transcripts.py $TRANSCRIPTOME $COLLAPSED_PROTEINS

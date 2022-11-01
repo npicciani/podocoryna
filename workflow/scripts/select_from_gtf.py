@@ -5,13 +5,13 @@
 Created on Dec 2, 2021
 by Natasha Picciani
 Python 3.7
-usage: select_from_gtf.py [transcriptlist] [gtf] [prefix] [outdir]
+usage: select_from_gtf.py [transcriptlist] [gtf] [outdir]
 
 """
 
+from pathlib import PurePosixPath
 import sys
 import pandas as pd
-from pathlib import PurePosixPath
 
 if len(sys.argv) < 2:
     sys.stderr.write(__doc__)
@@ -20,8 +20,7 @@ if len(sys.argv) < 2:
 else:
     transcriptList = sys.argv[1]
     gtffile = sys.argv[2]
-    prefix = sys.argv[3]
-    outputDir = sys.argv[4]
+    outputDir = sys.argv[3]
 
     querylist = []
     with open(transcriptList, "r") as file:
@@ -31,7 +30,7 @@ else:
 
     gtfname = PurePosixPath(gtffile).stem
     gtf = pd.read_table(gtffile, header=None)
-    newgtfFile = outputDir + "/" + gtfname + ".selected." + prefix + ".gtf"
+    newgtfFile = f"{outputDir}/{gtfname}.selected.gtf"
 
     # newgtf = gtf[gtf[0].isin(querylist)] # could also use this easy one liner
 
@@ -44,7 +43,7 @@ else:
             ].index.values  # get the row number where it is in
             gtf.drop(
                 index=index_val, inplace=True
-            )  # drop that row and modify the actual file
+            )  # drop that row and modify the actual df
 
     gtf.to_csv(
         newgtfFile, sep="\t", quoting=3, header=False, index=False
