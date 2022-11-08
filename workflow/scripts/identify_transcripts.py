@@ -13,6 +13,8 @@ transcript_seqs = set()
 with open(collapsed) as fastafile:
     for record in SeqIO.parse(fastafile, "fasta"):
         protein_seqs.append(record.id)
-        transcript_id = re.search(r"(PB.\d+.\d+|)", record.id)
-        transcript_seqs.add(transcript_id[0])
+        # transcript_id = re.search(r"(PB.\d+.\d+|)", record.id)        transcript_id = re.search(r"(transcript_\d+).p\d+ ", record.id)
+        # transcript_seqs.add(transcript_id[0])
+        transcript_id = re.search(r"(transcript_\d+).p\d+", record.id)
+        transcript_seqs.add(transcript_id.group(1))
 print(str(len(protein_seqs)) + "	" + str(len(transcript_seqs)))
