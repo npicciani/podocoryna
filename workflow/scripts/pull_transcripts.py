@@ -26,8 +26,8 @@ with open(original_transcriptome) as transcriptfile:
                 # if transcript == record.id.split("|")[0]:
                 collapsed.append(record)
 
-outfile = f"{collapsed_protein_file}.transcripts.collapsed.fasta"
-outfile2 = f"{collapsed_protein_file}.transcripts.collapsed.list.txt"
+outfile = f"{collapsed_protein_file}.transcripts.fasta"
+outfile2 = f"{collapsed_protein_file}.transcripts.list.txt"
 with open(outfile, "w") as out:
     with open(outfile2, "w") as out2:
         for record in collapsed:

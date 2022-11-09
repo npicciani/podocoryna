@@ -1,3 +1,18 @@
+rule generate_longest_ORFs:
+    """
+    Generate open reading frames from reference transcriptome.
+    """
+    input:
+        transcriptome_path=expand("{transcriptome_path}", transcriptome_path=config["reference"]["path"])
+    output:
+        expand("results/reference/{transcriptome_stem}.transdecoder_dir/longest_orfs.pep", transcriptome_stem=config["reference"]["filestem"])
+    params:
+        reference=expand("{transcriptome_stem}", transcriptome_stem=config["reference"]["filestem"])
+    conda:
+        "../../workflow/envs/transdecoder.yaml" #transdecoder v5.5.0
+    shell:
+        "TransDecoder.LongOrfs -t {input.transcriptome_path} --output_dir results/reference/{params.reference}.transdecoder_dir"
+
 rule gunzip:
 	input:
 		expand("resources/sequences/ensembl/{species}.pep.fasta.gz",species=ensembl_targets.loc[:,"species"]),
@@ -8,7 +23,7 @@ rule gunzip:
 	output:
 		expand("resources/sequences/{species}.pep.fasta", species=targets.index)
 	params:
-		referencePeptides=expand("results/reference-isoseq/{transcriptome}.transdecoder_dir/longest_orfs.pep", transcriptome=config["reference"]["fileStem"]),
+		reference_peptides=expand("results/reference/{transcriptome_stem}.transdecoder_dir/longest_orfs.pep", transcriptome_stem=config["reference"]["filestem"]),
 		link=expand("resources/sequences/{species}.pep.fasta", species=config["reference"]["species"])
 	shell:
 		"""
@@ -24,7 +39,7 @@ rule gunzip:
 		subdirs=`ls -d $dir/*/`
 		rm -R $subdirs
 
-		ln -s {params.referencePeptides} {params.link}
+		ln -s {params.reference_peptides} {params.link}
 		"""
 
 rule orthofinder:
@@ -39,6 +54,3 @@ rule orthofinder:
     threads: 20
     shell:
         "orthofinder -f {input} -t {threads} -o {output}"
-
-# Provide species tree to orthofinder
-# Include symbolic link to Podocoryna peptides

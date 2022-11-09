@@ -1,31 +1,33 @@
-rule cellranger_mkref_cogent:
+rule cellranger_mkref:
     """
-    Make reference using cell ranger and the original processed transcriptome file
+    Make references using cell ranger and the thresholded transcriptome files
     """
     input:
-        fasta=expand("results/reference-cogent/{transcriptome}.fasta.selected.fixed", transcriptome=config["reference"]["fileStem"]),
-        gtf=expand("results/reference-cogent/{transcriptome}.fasta.selected.fixed.eggnog.gtf", transcriptome=config["reference"]["fileStem"])
+        transcript=expand("results/reference/treeinform/threshold_{threshold}/{species}.collapsed.fasta.transcripts.fasta", threshold=["0.5","1","2","3","4","5","8","10","15"], species=config["species"]),
+        gtf=expand("results/reference/treeinform/threshold_{threshold}/{original_gtf_name}.selected.gtf", threshold=["0.5","1","2","3","4","5","8","10","15"], original_gtf=config["reference"]["gtfname"])
     output:
-        directory("results/cellranger-cogent/reference")
-    threads: 8
-    shell:
-        "cd results/cellranger-cogent && cellranger mkref --genome=reference --fasta=../../{input.fasta} --genes=../../{input.gtf}"
-
-rule cellranger_count_cogent:
-    input:
-        "results/cellranger-cogent/reference"
-    output:
-        directory(expand("results/cellranger-cogent/counts/{species}", species=config["species"]))
+        directory(expand("results/reference/treeinform/threshold_{threshold}/reference", threshold=["0.5","1","2","3","4","5","8","10","15"]))
     threads: 8
     params:
-        species=config["species"]
+        outdir=expand("results/reference/treeinform/threshold_{threshold}", threshold=["0.5","1","2","3","4","5","8","10","15"])
+    shell:
+        "cd {params.outdir} && cellranger mkref --genome=reference --fasta=../../../../{input.transcript} --genes=../../../../{input.gtf}"
+
+rule cellranger_count:
+    input:
+        directory(expand("results/reference/treeinform/threshold_{threshold}/reference", threshold=["0.5","1","2","3","4","5","8","10","15"]))
+    output:
+        directory(expand("results/reference/treeinform/threshold_{threshold}/{sample}", threshold=["0.5","1","2","3","4","5","8","10","15"], sample=["Podo1","Podo2","Podo3","Podo4","Podo5"]))
+    threads: 8
+    params:
+        outdir=expand("results/reference/treeinform/threshold_{threshold}", threshold=["0.5","1","2","3","4","5","8","10","15"]),
+        id=expand({sample}, sample=["Podo1","Podo2","Podo3","Podo4","Podo5"])
     shell:
         """
-        cd results/cellranger-cogent/counts
-        cellranger count --id={params.species} \
-                         --transcriptome=../reference \
-                         --fastqs=../../../resources/rawdata \
-                         --force-cells=8000 \
+        cd {params.outdir}
+        cellranger count --id={params.id} \
+                         --transcriptome=./reference \
+                         --fastqs=../../../../resources/rawdata/{params.id} \
                          --localcores={threads} \
                          --localmem=64
         """

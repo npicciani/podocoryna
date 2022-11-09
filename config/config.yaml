@@ -3,19 +3,13 @@ species: podocoryna_carnea
 # Path to accession numbers and links for public data download
 targets: config/download_targets.tsv
 
-# reference:
-#   path: resources/Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest.fasta
-#   filename: Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest.fasta
-#   fileStem: Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest
-
+# Reference before processing:
 reference:
-  path: resources/isoseq-ref/cogent/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta.selected
-  filename: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta.selected
-  fileStem: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200
-  partitionFile: resources/isoseq-ref/cogent/final.partition.txt
-
-# For rules 'keep_longest_ORF_per_gene' and 'make_GTF'
-geneIDType: type_5 #the type of gene identifier; type_1 = "compXX_cXX_seqXX", type_2="TRINITY_DNXXXXX_cX_gX_iX", type_3="SegXX.XX.XXXX"
+  path: resources/isoseq/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta
+  filename: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta
+  filestem: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200
+  gtf: resources/isoseq/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta.eggnog.positive.gtf
+  gtfname: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta.eggnog.positive.gtf
 
 # Install according to https://github.com/Trinotate/Trinotate.github.io/wiki/Software-installation-and-data-required
 rnammer: ~/local/bin/rnammer-1.2/rnammer # path to rnammer

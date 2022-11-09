@@ -28,7 +28,7 @@ else:
             line = line.strip("\n")
             querylist.extend(line.split(" "))
 
-    gtfname = PurePosixPath(gtffile).stem
+    gtfname = PurePosixPath(gtffile).name
     gtf = pd.read_table(gtffile, header=None)
     newgtfFile = f"{outputDir}/{gtfname}.selected.gtf"
 

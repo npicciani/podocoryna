@@ -1,4 +1,4 @@
-species	source	molecule	file	filename	accession
+species	source	molecule	file	filename
 Danio_rerio	ensembl	peptides	pub/release-105/fasta/danio_rerio/pep/Danio_rerio.GRCz11.pep.all.fa.gz	Danio_rerio.GRCz11.pep.all.fa.gz
 Homo_sapiens	ensembl	peptides	pub/release-105/fasta/homo_sapiens/pep/Homo_sapiens.GRCh38.pep.all.fa.gz	Homo_sapiens.GRCh38.pep.all.fa.gz
 Mus_musculus	ensembl	peptides	pub/release-105/fasta/mus_musculus/pep/Mus_musculus.GRCm39.pep.all.fa.gz	Mus_musculus.GRCm39.pep.all.fa.gz
@@ -13,7 +13,6 @@ Caerhabditis_elegans	ensemblgenomes	peptides	pub/metazoa/release-52/fasta/caenor
 Trichoplax_adhaerens	ensemblgenomes	peptides	pub/metazoa/release-52/fasta/trichoplax_adhaerens/pep/Trichoplax_adhaerens.ASM15027v1.pep.all.fa.gz	Trichoplax_adhaerens.ASM15027v1.pep.all.fa.gz
 Crassostrea_virginica	other_gz	peptides	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/022/765/GCF_002022765.2_C_virginica-3.0/GCF_002022765.2_C_virginica-3.0_protein.faa.gz	GCF_002022765.2_C_virginica-3.0_protein.faa.gz
 Orbicella_faveolata	other_gz	peptides	https://ftp.ncbi.nlm.nih.gov/genomes/all/annotation_releases/48498/100/GCF_002042975.1_ofav_dov_v1/GCF_002042975.1_ofav_dov_v1_protein.faa.gz	GCF_002042975.1_ofav_dov_v1_protein.faa.gz
-Aurelia_aurita_Atlantic	other_gz	peptides	https://marinegenomics.oist.jp/aurelia_aurita/download/AUR21_r04_proteins.fa.gz	AUR21_r04_proteins.fa.gz
 Morbakka_virulenta	other_gz	peptides	https://marinegenomics.oist.jp/morbakka_virulenta/download/MOR05_r06_proteins.fa.gz	MOR05_r06_proteins.fa.gz
 Hydra_vulgaris	other_gz	peptides	https://research.nhgri.nih.gov/hydra/download/genemodels_proteins/hydra2.0_genemodels.aa.gz	hydra2.0_genemodels.aa.gz
 Hydractinia_symbiolongicarpus	other_gz	peptides	https://research.nhgri.nih.gov/hydractinia/download/protein_models/symbio/Hsym_primary_v1.0.aa.gz	Hsym_primary_v1.0.aa.gz
@@ -22,4 +21,3 @@ Nematostella_vectensis	other	peptides	https://genomes.stowers.org/files/pub/nema
 Rhopilema_esculentum	other	peptides	https://ftp.cngb.org/pub/gigadb/pub/10.5524/100001_101000/100720/pep.fasta	pep.fasta
 Clytia_hemisphaerica	other	peptides	http://marimba.obs-vlfr.fr/sites/default/files/download/full_nr_align.fasta	full_nr_align.fasta
 Nemopilema_nomurai	other	peptides	ftp://External:tgiuiop@biodisk.org/NNO_Gene_set/NNO.final_gene_set.pep.fa	NNO.final_gene_set.pep.fa
-Aurelia_aurita_DGold	gdrive	peptides	--load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1hZhGGOOkgAiOUL44XnUm8EwoXN_kczEU' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1hZhGGOOkgAiOUL44XnUm8EwoXN_kczEU" && rm -rf /tmp/cookies.txt
