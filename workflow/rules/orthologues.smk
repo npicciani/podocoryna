@@ -1,3 +1,5 @@
+ORTHODATE, = glob_wildcards("results/orthofinder/Results_{monthDay}/Gene_Trees")
+
 from datetime import date
 def get_orthofinder_outdir():
     """
@@ -55,11 +57,12 @@ rule orthofinder:
     input:
         expand("resources/sequences/{species}.pep.fasta", species=targets.index)
     output:
-        gene_trees=directory(get_orthofinder_outdir())
+        gene_trees="results/orthofinder/Results_{date}/Gene_Trees"
+        # gene_trees=directory(get_orthofinder_outdir())
     conda:
         "../../workflow/envs/orthofinder.yaml"
     log:
-        "logs/orthofinder/orthofinder.log"
+        "logs/orthofinder/orthofinder_{date}.log"
     threads: 20
     shell:
         """
