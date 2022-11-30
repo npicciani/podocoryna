@@ -1,3 +1,13 @@
+from datetime import date
+def get_orthofinder_outdir():
+    """
+    Generates path to orthofinder results folder with current date as written by orthofinder
+    """
+    today = date.today()
+    monthDay = today.strftime("%b%d")
+    outdir= f"results/orthofinder/Results_{monthDay}/Gene_Trees"
+    return outdir
+
 rule generate_longest_ORFs:
     """
     Generate open reading frames from reference transcriptome.
@@ -14,43 +24,45 @@ rule generate_longest_ORFs:
         "TransDecoder.LongOrfs -t {input.transcriptome_path} --output_dir results/reference/{params.reference}.transdecoder_dir"
 
 rule gunzip:
-	input:
-		expand("resources/sequences/ensembl/{species}.pep.fasta.gz",species=ensembl_targets.loc[:,"species"]),
-		expand("resources/sequences/ensemblgenomes/{species}.pep.fasta.gz",species=ensemblgenomes_targets.loc[:,"species"]),
-		expand("resources/sequences/gdrive/{species}.pep.fasta",species=gdrive_targets.loc[:,"species"]),
-		expand("resources/sequences/other/{species}.pep.fasta",species=other_targets.loc[:,"species"]),
-		expand("resources/sequences/other_gz/{species}.pep.fasta.gz",species=other_gz_targets.loc[:,"species"])
-	output:
-		expand("resources/sequences/{species}.pep.fasta", species=targets.index)
-	params:
-		reference_peptides=expand("results/reference/{transcriptome_stem}.transdecoder_dir/longest_orfs.pep", transcriptome_stem=config["reference"]["filestem"]),
-		link=expand("resources/sequences/{species}.pep.fasta", species=config["reference"]["species"])
-	shell:
-		"""
-		dir="resources/sequences"
-		gzfiles=`ls $dir/*/*.gz`
-		for file in $gzfiles; do
-			gunzip $file
-		done
-		fastafiles=`ls $dir/*/*.fasta`
-		for file in $fastafiles; do
-			mv $file $dir
-		done
-		subdirs=`ls -d $dir/*/`
-		rm -R $subdirs
+    input:
+        expand("resources/sequences/ensembl/{species}.pep.fasta.gz",species=ensembl_targets.loc[:,"species"]),
+        expand("resources/sequences/ensemblgenomes/{species}.pep.fasta.gz",species=ensemblgenomes_targets.loc[:,"species"]),
+        expand("resources/sequences/other/{species}.pep.fasta",species=other_targets.loc[:,"species"]),
+        expand("resources/sequences/other_gz/{species}.pep.fasta.gz",species=other_gz_targets.loc[:,"species"])
+    output:
+        expand("resources/sequences/{species}.pep.fasta", species=targets.index)
+    params:
+        reference_peptides=expand("results/reference/{transcriptome_stem}.transdecoder_dir/longest_orfs.pep", transcriptome_stem=config["reference"]["filestem"]),
+        link=expand("resources/sequences/{species}.pep.fasta", species=config["species"])
+    shell:
+        """
+        dir="resources/sequences"
+        gzfiles=`ls $dir/*/*.gz`
+        for file in $gzfiles; do
+            gunzip $file
+        done
+        fastafiles=`ls $dir/*/*.fasta`
+        for file in $fastafiles; do
+            mv $file $dir
+        done
+        subdirs=`ls -d $dir/*/`
+        rm -R $subdirs
 
-		ln -s {params.reference_peptides} {params.link}
-		"""
+        cp {params.reference_peptides} {params.link}
+        """
 
 rule orthofinder:
     input:
-        directory("resources/sequences")
+        expand("resources/sequences/{species}.pep.fasta", species=targets.index)
     output:
-        directory("results/orthofinder")
+        gene_trees=directory(get_orthofinder_outdir())
     conda:
-        "../envs/orthofinder.yaml"
+        "../../workflow/envs/orthofinder.yaml"
     log:
         "logs/orthofinder/orthofinder.log"
     threads: 20
     shell:
-        "orthofinder -f {input} -t {threads} -o {output}"
+        """
+        rm -rf results/orthofinder
+        orthofinder -t {threads} -f resources/sequences -o results/orthofinder
+        """
