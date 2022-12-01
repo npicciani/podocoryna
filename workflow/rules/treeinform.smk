@@ -1,5 +1,3 @@
-THRESHOLD_VALS = "0.5,1,2,3,4,5,8,10,15".split(",")
-
 rule collapse_with_treeinform:
     input:
         gene_trees=expand("results/orthofinder/Results_{date}/Gene_Trees",date=ORTHODATE),
