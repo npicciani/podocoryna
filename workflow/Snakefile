@@ -9,8 +9,8 @@ THRESHOLD_VALS = "0.5,1,2,3,4,5,8,10,15".split(",")
 include: "rules/data.smk"
 include: "rules/orthologues.smk"
 include: "rules/treeinform.smk"
+include: "rules/busco.smk"
 # include: "rules/cellranger.smk"
-# include: "rules/stats.smk"
 # include: "rules/blastx.smk"
 # include: "rules/trinotate.smk"
 
@@ -34,4 +34,5 @@ rule all:
         "results/orthofinder",
         expand("results/reference/treeinform/threshold_{threshold}/{species}.collapsed.fasta.transcripts.fasta", threshold=THRESHOLD_VALS, species=config["species"]),
         expand("results/reference/treeinform/threshold_{threshold}/branch.length.hist_{threshold}.png", threshold=THRESHOLD_VALS),
-        expand("results/reference/treeinform/threshold_{threshold}/{original_gtf_name}.selected.gtf", threshold=THRESHOLD_VALS, original_gtf_name=config["reference"]["gtfname"])
+        expand("results/reference/treeinform/threshold_{threshold}/{original_gtf_name}.selected.gtf", threshold=THRESHOLD_VALS, original_gtf_name=config["reference"]["gtfname"]),
+        expand("results/reference/treeinform/threshold_{threshold}/busco", threshold=THRESHOLD_VALS)
