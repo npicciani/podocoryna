@@ -40,17 +40,17 @@ rule match_transcripts:
         python {input.script} {input.original_reference} {input.collapsed_proteins}
         """
 
-# rule select_from_gtf:
-#     input:
-#         gtf=expand("{original_gtf}", original_gtf=config["reference"]["gtf"]),
-#         script="workflow/scripts/select_from_gtf.py",
-#         list_of_transcripts=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.list.txt", species=config["species"])
-#     output:
-#         expand("results/reference/treeinform/threshold_{{threshold}}/{original_gtf_name}.selected.gtf", original_gtf_name=config["reference"]["gtfname"])
-#     shell:
-#         """
-#         python {input.script} {input.list_of_transcripts} {input.gtf} {output}
-#         """
+rule select_from_gtf:
+    input:
+        gtf=expand("{original_gtf}", original_gtf=config["reference"]["gtf"]),
+        script="workflow/scripts/select_from_gtf.py",
+        list_of_transcripts=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta.transcripts.list.txt", species=config["species"])
+    output:
+        expand("results/reference/treeinform/threshold_{{threshold}}/{original_gtf_name}.selected.gtf", original_gtf_name=config["reference"]["gtfname"])
+    shell:
+        """
+        python {input.script} {input.list_of_transcripts} {input.gtf} {output}
+        """
 
 # rule get_mitochondrial_genes:
 #     input:

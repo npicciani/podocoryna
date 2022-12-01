@@ -18,7 +18,8 @@ include: "rules/treeinform.smk"
 # target rule
 rule all:
     input:
-        # expand("results/reference/treeinform/threshold_{threshold}/{sample}", threshold=[0.5,1,2,3,4,5,8,10,15], sample=["Podo1","Podo2","Podo3","Podo4","Podo5"])        # "results/blastx-ncbi/blastx.outfmt6",
+        # expand("results/reference/treeinform/threshold_{threshold}/{sample}", threshold=[0.5,1,2,3,4,5,8,10,15], sample=["Podo1","Podo2","Podo3","Podo4","Podo5"])
+        # "results/blastx-ncbi/blastx.outfmt6",
         # "results/blastx-isoseq/blastx.outfmt6"
         # expand("results/reference/{transcriptome}.transdecoder_dir/longest_orfs.pep", transcriptome=config["reference"]["filename"]),
         # expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["filename"]),
@@ -32,6 +33,5 @@ rule all:
         expand("results/reference/{transcriptome_stem}.transdecoder_dir/longest_orfs.pep", transcriptome_stem=config["reference"]["filestem"]),
         "results/orthofinder",
         expand("results/reference/treeinform/threshold_{threshold}/{species}.collapsed.fasta.transcripts.fasta", threshold=THRESHOLD_VALS, species=config["species"]),
-        expand("results/reference/treeinform/threshold_{threshold}/branch.length.hist_{threshold}.png", threshold=THRESHOLD_VALS)
-        # expand("results/reference/treeinform/threshold_{threshold}/{original_gtf_name}.selected.gtf", threshold=THRESHOLD_VALS, original_gtf_name=config["reference"]["gtfname"]),
-        # expand("results/reference/treeinform/threshold_{threshold}/branch.length.hist_{threshold}.png",threshold=THRESHOLD_VALS)
+        expand("results/reference/treeinform/threshold_{threshold}/branch.length.hist_{threshold}.png", threshold=THRESHOLD_VALS),
+        expand("results/reference/treeinform/threshold_{threshold}/{original_gtf_name}.selected.gtf", threshold=THRESHOLD_VALS, original_gtf_name=config["reference"]["gtfname"])
