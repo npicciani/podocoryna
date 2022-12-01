@@ -47,9 +47,11 @@ rule select_from_gtf:
         list_of_transcripts=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta.transcripts.list.txt", species=config["species"])
     output:
         expand("results/reference/treeinform/threshold_{{threshold}}/{original_gtf_name}.selected.gtf", original_gtf_name=config["reference"]["gtfname"])
+    params:
+        outdir="results/reference/treeinform/threshold_{threshold}"
     shell:
         """
-        python {input.script} {input.list_of_transcripts} {input.gtf} {output}
+        python {input.script} {input.list_of_transcripts} {input.gtf} {params.outdir}
         """
 
 # rule get_mitochondrial_genes:
