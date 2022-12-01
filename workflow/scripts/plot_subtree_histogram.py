@@ -73,7 +73,11 @@ def plot_histogram(histogram, binsize, threshold_value, outdir):
     -- outdir: output directory for image file named 'branch.length.hist.png'.
     """
 
-    figname = f"{outdir}/branch.length.hist_{threshold_value}.png"
+    if threshold_value.is_integer():
+        threshold_value_int = int(threshold_value)
+        figname = f"{outdir}/branch.length.hist_{threshold_value_int}.png"
+    else:
+        figname = f"{outdir}/branch.length.hist_{threshold_value}.png"
     plt.hist(histogram, bins=binsize, edgecolor="k")
     plt.xlabel("Branch Length")
     plt.ylabel("Frequency")

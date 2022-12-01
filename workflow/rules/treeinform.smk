@@ -22,10 +22,12 @@ rule plot_subtree_histogram:
         script="workflow/scripts/plot_subtree_histogram.py",
         collapsed_proteins=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta", species=config["species"])
     output:
-        "results/reference/treeinform/threshold_{threshold}/branch.length.hist_{threshold}.png"
+        image="results/reference/treeinform/threshold_{threshold}/branch.length.hist_{threshold}.png",
+    params:
+        outdir="results/reference/treeinform/threshold_{threshold}"
     shell:
         """
-        python {input.script} -gt {input.gene_trees} -t {wildcards.threshold} -b 20000 -o {output}
+        python {input.script} -gt {input.gene_trees} -t {wildcards.threshold} -b 20000 -o {params.outdir}
         """
 
 rule match_transcripts:
@@ -34,26 +36,23 @@ rule match_transcripts:
         collapsed_proteins=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta", species=config["species"]),
         script="workflow/scripts/pull_transcripts.py"
     output:
-        transcripts=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta.transcripts.fasta", species=config["species"]),
-        list_of_transcripts=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.list.txt", species=config["species"])
-    params:
-        peptides=expand("results/reference/{transcriptome_stem}.transdecoder_dir/longest_orfs.pep", transcriptome_stem=config["reference"]["filestem"]),
+        transcripts=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta.transcripts.fasta", species=config["species"])
     shell:
         """
         python {input.script} {input.original_reference} {input.collapsed_proteins}
         """
 
-rule select_from_gtf:
-    input:
-        gtf=expand("{original_gtf}", original_gtf=config["reference"]["gtf"]),
-        script="workflow/scripts/select_from_gtf.py",
-        list_of_transcripts=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.list.txt", species=config["species"])
-    output:
-        expand("results/reference/treeinform/threshold_{{threshold}}/{original_gtf_name}.selected.gtf", original_gtf_name=config["reference"]["gtfname"])
-    shell:
-        """
-        python {input.script} {input.list_of_transcripts} {input.gtf} {output}
-        """
+# rule select_from_gtf:
+#     input:
+#         gtf=expand("{original_gtf}", original_gtf=config["reference"]["gtf"]),
+#         script="workflow/scripts/select_from_gtf.py",
+#         list_of_transcripts=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.list.txt", species=config["species"])
+#     output:
+#         expand("results/reference/treeinform/threshold_{{threshold}}/{original_gtf_name}.selected.gtf", original_gtf_name=config["reference"]["gtfname"])
+#     shell:
+#         """
+#         python {input.script} {input.list_of_transcripts} {input.gtf} {output}
+#         """
 
 # rule get_mitochondrial_genes:
 #     input:
