@@ -4,13 +4,14 @@ min_version("6.4.1")
 
 configfile: "config/config.yaml"
 THRESHOLD_VALS = "0.5,1,2,3,4,5,8,10,15".split(",")
+SAMPLE_IDS = "Podo1,Podo2,Podo3,Podo4,Podo5".split(",")
 
 # load rules
 include: "rules/data.smk"
 include: "rules/orthologues.smk"
 include: "rules/treeinform.smk"
 include: "rules/busco.smk"
-# include: "rules/cellranger.smk"
+include: "rules/cellranger.smk"
 # include: "rules/blastx.smk"
 # include: "rules/trinotate.smk"
 
@@ -35,4 +36,6 @@ rule all:
         expand("results/reference/treeinform/threshold_{threshold}/{species}.collapsed.fasta.transcripts.fasta", threshold=THRESHOLD_VALS, species=config["species"]),
         expand("results/reference/treeinform/threshold_{threshold}/branch.length.hist_{threshold}.png", threshold=THRESHOLD_VALS),
         expand("results/reference/treeinform/threshold_{threshold}/{original_gtf_name}.selected.gtf", threshold=THRESHOLD_VALS, original_gtf_name=config["reference"]["gtfname"]),
-        expand("results/reference/treeinform/threshold_{threshold}/busco", threshold=THRESHOLD_VALS)
+        expand("results/reference/treeinform/threshold_{threshold}/busco", threshold=THRESHOLD_VALS),
+        expand("results/reference/treeinform/threshold_{threshold}/cellranger/reference", threshold=THRESHOLD_VALS),
+        expand("results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/web_summary.html", threshold=THRESHOLD_VALS, sample=SAMPLE_IDS)

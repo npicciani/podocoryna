@@ -3,31 +3,39 @@ rule cellranger_mkref:
     Make references using cell ranger and the thresholded transcriptome files
     """
     input:
-        transcript=expand("results/reference/treeinform/threshold_{threshold}/{species}.collapsed.fasta.transcripts.fasta", threshold=["0.5","1","2","3","4","5","8","10","15"], species=config["species"]),
-        gtf=expand("results/reference/treeinform/threshold_{threshold}/{original_gtf_name}.selected.gtf", threshold=["0.5","1","2","3","4","5","8","10","15"], original_gtf=config["reference"]["gtfname"])
+        transcript=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta.transcripts.fasta", species=config["species"]),
+        gtf=expand("results/reference/treeinform/threshold_{{threshold}}/{original_gtf_name}.selected.gtf", original_gtf_name=config["reference"]["gtfname"])
     output:
-        directory(expand("results/reference/treeinform/threshold_{threshold}/reference", threshold=["0.5","1","2","3","4","5","8","10","15"]))
+        directory("results/reference/treeinform/threshold_{threshold}/cellranger/reference")
     threads: 8
     params:
-        outdir=expand("results/reference/treeinform/threshold_{threshold}", threshold=["0.5","1","2","3","4","5","8","10","15"])
-    shell:
-        "cd {params.outdir} && cellranger mkref --genome=reference --fasta=../../../../{input.transcript} --genes=../../../../{input.gtf}"
-
-rule cellranger_count:
-    input:
-        directory(expand("results/reference/treeinform/threshold_{threshold}/reference", threshold=["0.5","1","2","3","4","5","8","10","15"]))
-    output:
-        directory(expand("results/reference/treeinform/threshold_{threshold}/{sample}", threshold=["0.5","1","2","3","4","5","8","10","15"], sample=["Podo1","Podo2","Podo3","Podo4","Podo5"]))
-    threads: 8
-    params:
-        outdir=expand("results/reference/treeinform/threshold_{threshold}", threshold=["0.5","1","2","3","4","5","8","10","15"]),
-        id=expand({sample}, sample=["Podo1","Podo2","Podo3","Podo4","Podo5"])
+        outdir="results/reference/treeinform/threshold_{threshold}/cellranger"
     shell:
         """
         cd {params.outdir}
+        cellranger mkref --genome=reference \
+                        --fasta=../../../../../{input.transcript} \
+                        --genes=../../../../../{input.gtf}
+        """
+
+rule cellranger_count:
+    input:
+        input_dir="results/reference/treeinform/threshold_{threshold}/cellranger/reference"
+    output:
+        outfile="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/web_summary.html"
+    threads: 8
+    params:
+        outdir="results/reference/treeinform/threshold_{threshold}/cellranger",
+        id="{sample}",
+        reference_dir="./reference",
+        fastqs_dir="../../../../../resources/rawdata/{sample}"
+    shell:
+        """
+        rm -rf results/reference/treeinform/threshold_{wildcards.threshold}/cellranger/{wildcards.sample}
+        cd {params.outdir}
         cellranger count --id={params.id} \
-                         --transcriptome=./reference \
-                         --fastqs=../../../../resources/rawdata/{params.id} \
+                         --transcriptome={params.reference_dir} \
+                         --fastqs={params.fastqs_dir} \
                          --localcores={threads} \
                          --localmem=64
         """
