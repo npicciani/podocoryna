@@ -1,3 +1,6 @@
+def get_batch(wildcards):
+    return config["batch"][wildcards.sample]
+
 rule cellranger_mkref:
     """
     Make references using cell ranger and the thresholded transcriptome files
@@ -22,20 +25,54 @@ rule cellranger_count:
     input:
         input_dir="results/reference/treeinform/threshold_{threshold}/cellranger/reference"
     output:
-        outfile="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/web_summary.html"
+        outfile="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/molecule_info.h5",
     threads: 8
     params:
         outdir="results/reference/treeinform/threshold_{threshold}/cellranger",
-        id="{sample}",
         reference_dir="./reference",
         fastqs_dir="../../../../../resources/rawdata/{sample}"
     shell:
         """
         rm -rf results/reference/treeinform/threshold_{wildcards.threshold}/cellranger/{wildcards.sample}
         cd {params.outdir}
-        cellranger count --id={params.id} \
+        cellranger count --id={wildcards.sample} \
                          --transcriptome={params.reference_dir} \
                          --fastqs={params.fastqs_dir} \
                          --localcores={threads} \
                          --localmem=64
+        """
+rule cellranger_aggregate_init:
+    input:
+        info="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/molecule_info.h5"
+    output:
+        aggregate_init_stamp="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/{sample}.aggregate_init.stamp",
+    params:
+        relative_path="../../cellranger/{sample}/outs/molecule_info.h5",
+        csv = "results/reference/treeinform/threshold_{threshold}/cellranger/aggregate/samples.csv",
+        batch = get_batch
+    run:
+        import os
+        if os.path.exists(params.csv):
+            with open(params.csv,"a") as out1:
+                out1.write(f"{(wildcards.sample)},{(params.relative_path)},{(params.batch)}\n")
+        if not os.path.exists(params.csv):
+            shell("mkdir results/reference/treeinform/threshold_{wildcards.threshold}/cellranger/aggregate")
+            with open(params.csv, "w") as out2:
+                out2.write("sample_id,molecule_h5,batch"+"\n")
+                out2.write(f"{(wildcards.sample)},{(params.relative_path)},{(params.batch)}\n")
+        shell("touch {output.aggregate_init_stamp}")
+
+rule cellranger_aggregate:
+    input:
+        aggregate_init_stamp="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/{sample}.aggregate_init.stamp"
+    output:
+        aggregate_stamp="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/{sample}.aggregate.stamp"
+    params:
+        outdir = "results/reference/treeinform/threshold_{threshold}/cellranger/aggregate"
+    shell:
+        """
+        cd {params.outdir}
+        cellranger aggr --id=aggregated \
+                        --csv=samples.csv
+        touch ../../../../../../{output.aggregate_stamp}
         """
