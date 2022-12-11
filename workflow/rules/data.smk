@@ -10,6 +10,7 @@ ensembl_targets = targets.loc[lambda targets: targets['source'] == "ensembl"]
 ensemblgenomes_targets = targets.loc[lambda targets: targets['source'] == "ensemblgenomes"]
 other_targets = targets.loc[lambda targets: targets['source'] == "other"]
 other_gz_targets = targets.loc[lambda targets: targets['source'] == "other_gz"]
+gdrive_targets = targets.loc[lambda targets: targets['source'] == "gdrive"]
 
 def get_sequence(wildcards, type):
     """
@@ -28,6 +29,9 @@ def get_sequence(wildcards, type):
     if type == "other_gz":
         if species_units["source"] == "other_gz":
             return species_units["file"]
+    if type == "gdrive":
+        if species_units["source"] == "gdrive":
+            return species_units["file"]
 
 rule get_ensembl:
     output:
@@ -45,7 +49,7 @@ rule get_ensemblgenomes:
     shell:
         "wget http://ftp.ensemblgenomes.org/{params} -O {output}"
 
-rule wget_other:
+rule get_other:
     output:
         "resources/sequences/other/{species}.pep.fasta"
     params:
@@ -55,7 +59,7 @@ rule wget_other:
         wget --no-check-certificate {params} -O {output}
         """
 
-rule wget_other_gz:
+rule get_other_gz:
     output:
         "resources/sequences/other_gz/{species}.pep.fasta.gz"
     params:
@@ -64,3 +68,14 @@ rule wget_other_gz:
         """
         wget --no-check-certificate {params} -O {output}
         """
+
+rule get_gdrive:
+    output:
+        "resources/sequences/gdrive/{species}.pep.fasta"
+    params:
+        lambda wc: get_sequence(wc, type="gdrive")
+    shell:
+        """
+        wget -O {output} {params}
+        """
+#filename and path is embedded in the gdrive command listed in the file column of target tsv

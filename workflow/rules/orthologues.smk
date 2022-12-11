@@ -1,5 +1,3 @@
-ORTHODATE, = glob_wildcards("results/orthofinder/Results_{monthDay}/Gene_Trees")
-
 from datetime import date
 def get_orthofinder_outdir():
     """
@@ -30,39 +28,40 @@ rule gunzip:
         expand("resources/sequences/ensembl/{species}.pep.fasta.gz",species=ensembl_targets.loc[:,"species"]),
         expand("resources/sequences/ensemblgenomes/{species}.pep.fasta.gz",species=ensemblgenomes_targets.loc[:,"species"]),
         expand("resources/sequences/other/{species}.pep.fasta",species=other_targets.loc[:,"species"]),
-        expand("resources/sequences/other_gz/{species}.pep.fasta.gz",species=other_gz_targets.loc[:,"species"])
+        expand("resources/sequences/other_gz/{species}.pep.fasta.gz",species=other_gz_targets.loc[:,"species"]),
+        expand("resources/sequences/gdrive/{species}.pep.fasta",species=gdrive_targets.loc[:,"species"])
     output:
         expand("resources/sequences/{species}.pep.fasta", species=targets.index)
     params:
         reference_peptides=expand("results/reference/{transcriptome_stem}.transdecoder_dir/longest_orfs.pep", transcriptome_stem=config["reference"]["filestem"]),
-        link=expand("resources/sequences/{species}.pep.fasta", species=config["species"])
+        copyfile=expand("resources/sequences/{species}.pep.fasta", species=config["species"])
     shell:
         """
         dir="resources/sequences"
-        gzfiles=`ls $dir/*/*.gz`
+        gzfiles=`find $dir/* -name '*.gz'`
         for file in $gzfiles; do
             gunzip $file
         done
-        fastafiles=`ls $dir/*/*.fasta`
+        fastafiles=`find $dir/* -name '*.fasta'`
         for file in $fastafiles; do
             mv $file $dir
         done
         subdirs=`ls -d $dir/*/`
         rm -R $subdirs
 
-        cp {params.reference_peptides} {params.link}
+        cp {params.reference_peptides} {params.copyfile}
         """
 
 rule orthofinder:
     input:
         expand("resources/sequences/{species}.pep.fasta", species=targets.index)
     output:
-        gene_trees="results/orthofinder/Results_{date}/Gene_Trees"
-        # gene_trees=directory(get_orthofinder_outdir())
+        # gene_trees=directory("results/orthofinder/Results_{date}/Gene_Trees"), #doesnt work if file hasnt already been created
+        directory(get_orthofinder_outdir())
     conda:
         "../../workflow/envs/orthofinder.yaml"
-    log:
-        "logs/orthofinder/orthofinder_{date}.log"
+    # log:
+        # "logs/orthofinder/orthofinder_{date}.log"
     threads: 20
     shell:
         """
