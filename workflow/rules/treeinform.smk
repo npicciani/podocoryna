@@ -1,6 +1,7 @@
 rule collapse_with_treeinform:
     input:
-        gene_trees=expand("results/orthofinder/Results_{date}/Gene_Trees",date=ORTHODATE),
+        # gene_trees=expand("results/orthofinder/Results_{date}/Gene_Trees",date=ORTHODATE),
+        gene_trees=get_orthofinder_outdir(),
         script="workflow/scripts/treeinform_collapse.py"
     output:
         collapsed_proteins=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta", species=config["species"])
@@ -16,7 +17,8 @@ rule collapse_with_treeinform:
 
 rule plot_subtree_histogram:
     input:
-        gene_trees=expand("results/orthofinder/Results_{date}/Gene_Trees",date=ORTHODATE),
+        # gene_trees=expand("results/orthofinder/Results_{date}/Gene_Trees",date=ORTHODATE),
+        gene_trees=get_orthofinder_outdir(),
         script="workflow/scripts/plot_subtree_histogram.py",
         collapsed_proteins=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta", species=config["species"])
     output:
@@ -34,7 +36,8 @@ rule match_transcripts:
         collapsed_proteins=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta", species=config["species"]),
         script="workflow/scripts/pull_transcripts.py"
     output:
-        transcripts=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta.transcripts.fasta", species=config["species"])
+        transcripts=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta.transcripts.fasta", species=config["species"]),
+        list_of_transcripts=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta.transcripts.list.txt", species=config["species"])
     shell:
         """
         python {input.script} {input.original_reference} {input.collapsed_proteins}
