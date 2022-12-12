@@ -1,6 +1,5 @@
 rule collapse_with_treeinform:
     input:
-        # gene_trees=expand("results/orthofinder/Results_{date}/Gene_Trees",date=ORTHODATE),
         gene_trees=get_orthofinder_outdir(),
         script="workflow/scripts/treeinform_collapse.py"
     output:
@@ -17,7 +16,6 @@ rule collapse_with_treeinform:
 
 rule plot_subtree_histogram:
     input:
-        # gene_trees=expand("results/orthofinder/Results_{date}/Gene_Trees",date=ORTHODATE),
         gene_trees=get_orthofinder_outdir(),
         script="workflow/scripts/plot_subtree_histogram.py",
         collapsed_proteins=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta", species=config["species"])
@@ -56,19 +54,3 @@ rule select_from_gtf:
         """
         python {input.script} {input.list_of_transcripts} {input.gtf} {params.outdir}
         """
-
-# rule get_mitochondrial_genes:
-#     input:
-#         nucleotides=expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
-#     output:
-#         directory("results/mitofinder")
-#     params:
-#         mem="50GB",
-#         mit_reference="resources/LN901210.1.gb",
-#         mitofinder = expand("{mitofinderPath}", mitofinderPath=config["mitofinder"])
-#     threads: 20
-#     shell:
-#         """
-#         mkdir {output} && cd {output}
-#         {params.mitofinder} -j podocoryna -a ../../{input.nucleotides} -r ../../{params.mit_reference} -o 4 -m {params.mem} -p {threads}
-#         """

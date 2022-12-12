@@ -5,16 +5,13 @@ min_version("6.4.1")
 configfile: "config/config.yaml"
 THRESHOLD_VALS = "0.5,1,2,3,4,5,8,10,15,20,25".split(",")
 SAMPLE_IDS = "Podo1,Podo2,Podo3,Podo4,Podo5".split(",")
-ORTHODATE, = glob_wildcards("results/orthofinder/Results_{MonthDay}/Gene_Trees")
 
 # load rules
 include: "rules/data.smk"
-# include: "rules/orthologues.smk"
-# include: "rules/treeinform.smk"
-# include: "rules/busco.smk"
+include: "rules/orthologues.smk"
+include: "rules/treeinform.smk"
+include: "rules/busco.smk"
 include: "rules/cellranger.smk"
-# include: "rules/blastx.smk"
-# include: "rules/trinotate.smk"
 
 
 # target rule
@@ -22,7 +19,7 @@ rule all:
     input:
         expand("resources/sequences/{species}.pep.fasta", species=targets.index),
         expand("results/reference/{transcriptome_stem}.transdecoder_dir/longest_orfs.pep", transcriptome_stem=config["reference"]["filestem"]),
-        # get_orthofinder_outdir(),
+        get_orthofinder_outdir(),
         expand("results/reference/treeinform/threshold_{threshold}/{species}.collapsed.fasta.transcripts.fasta", threshold=THRESHOLD_VALS, species=config["species"]),
         expand("results/reference/treeinform/threshold_{threshold}/branch.length.hist_{threshold}.png", threshold=THRESHOLD_VALS),
         expand("results/reference/treeinform/threshold_{threshold}/{original_gtf_name}.selected.gtf", threshold=THRESHOLD_VALS, original_gtf_name=config["reference"]["gtfname"]),
@@ -31,16 +28,3 @@ rule all:
         expand("results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/molecule_info.h5", threshold=THRESHOLD_VALS, sample=SAMPLE_IDS),
         expand("results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/{sample}.aggregate_init.stamp",threshold=THRESHOLD_VALS, sample=SAMPLE_IDS),
         expand("results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/{sample}.aggregate.stamp",threshold=THRESHOLD_VALS, sample=SAMPLE_IDS)
-
-        # expand("results/orthofinder/Results_{date}/Gene_Trees", date=ORTHODATE)
-        # expand("results/reference/treeinform/threshold_{threshold}/{sample}", threshold=[0.5,1,2,3,4,5,8,10,15], sample=["Podo1","Podo2","Podo3","Podo4","Podo5"])
-        # "results/blastx-ncbi/blastx.outfmt6",
-        # "results/blastx-isoseq/blastx.outfmt6"
-        # expand("results/reference/{transcriptome}.transdecoder_dir/longest_orfs.pep", transcriptome=config["reference"]["filename"]),
-        # expand("results/reference/{transcriptome}_longestORFperGene.pep", transcriptome=config["reference"]["filename"]),
-        # expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
-        # expand("results/reference/{transcriptome}_longestORFperGene.fasta.eggnog.gtf",transcriptome=config["reference"]["filename"]),
-        # expand("results/cellranger-isoseq/counts/{species}", species=config["species"]),
-        # "results/mitofinder",
-        # "results/trinotate-isoseq/trinotate_annotation_report.xls",
-        # "results/trinotate-isoseq/go_annotations.txt",

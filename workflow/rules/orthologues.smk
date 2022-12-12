@@ -56,12 +56,9 @@ rule orthofinder:
     input:
         expand("resources/sequences/{species}.pep.fasta", species=targets.index)
     output:
-        # gene_trees=directory("results/orthofinder/Results_{date}/Gene_Trees"), #doesnt work if file hasnt already been created
         directory(get_orthofinder_outdir())
     conda:
         "../../workflow/envs/orthofinder.yaml"
-    # log:
-        # "logs/orthofinder/orthofinder_{date}.log"
     threads: 20
     shell:
         """
