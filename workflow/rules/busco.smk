@@ -13,3 +13,9 @@ rule busco_scores:
         filename=expand("{species}.collapsed.fasta.transcripts.fasta", species=config["species"])
     shell:
         "busco -i {input} -o {params.filename} --force --out_path {output} -l {params.lineage} -m {params.mode} --download_path {params.download_path} -c {threads}"
+
+# rule report_metrics:
+#     input:
+#         cellranger_mapping="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/metrics_summary.csv",
+#         busco_summary=expand("results/reference/treeinform/threshold_{{threshold}}/busco/{species}.collapsed.fasta.transcripts.fasta/short_summary.specific.metazoa_odb10.{species}.collapsed.fasta.transcripts.fasta.txt", species=config["species"])
+#     output:
