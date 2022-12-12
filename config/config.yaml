@@ -18,11 +18,3 @@ batch:
   Podo3: HT_v3
   Podo4: HT_v3
   Podo5: HT_v3
-
-# Install according to https://github.com/Trinotate/Trinotate.github.io/wiki/Software-installation-and-data-required
-rnammer: ~/local/bin/rnammer-1.2/rnammer # path to rnammer
-tmhmm: ~/local/bin/tmhmm-2.0c/bin/tmhmm # path to tmhmm
-signalp: ~/local/bin/signalp-4.1/signalp # path to signalp
-
-#Install Mitofinder
-mitofinder: /home/nnp9/local/bin/MitoFinder/mitofinder #path to mitofinder
