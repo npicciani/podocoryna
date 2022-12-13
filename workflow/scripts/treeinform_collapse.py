@@ -19,9 +19,9 @@ def load_trees(gene_trees_folder):
     """
 
     trees = []
-    for path in os.listdir(gene_trees_folder):
-        tree_path = os.path.join(gene_trees_folder, path)
-        if os.path.isfile(tree_path):
+    for file in os.listdir(gene_trees_folder):
+        if file.endswith(".txt"):
+            tree_path = os.path.join(gene_trees_folder, file)
             trees.append(tree_path)
     assert len(trees) != 0
     return trees
