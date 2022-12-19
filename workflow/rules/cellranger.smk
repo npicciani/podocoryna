@@ -1,9 +1,12 @@
 def get_batch(wildcards):
+    """
+    Return string with batch information from each sample
+    """
     return config["batch"][wildcards.sample]
 
-rule cellranger_mkref:
+rule mkref_cellranger:
     """
-    Make references using cell ranger and the thresholded transcriptome files
+    Make references using cellranger and the thresholded transcriptome files
     """
     input:
         transcript=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta.transcripts.fasta", species=config["species"]),
@@ -21,7 +24,11 @@ rule cellranger_mkref:
                         --genes=../../../../../{input.gtf}
         """
 
-rule cellranger_count:
+rule count_cellranger:
+    """
+    Run cellranger count to align single cell reads to reference transcriptome.
+    """
+
     input:
         input_dir="results/reference/treeinform/threshold_{threshold}/cellranger/reference"
     output:
@@ -41,7 +48,12 @@ rule cellranger_count:
                          --localcores={threads} \
                          --localmem=64
         """
-rule cellranger_aggregate_init:
+rule aggregate_init_cellranger:
+    """
+    Start and populate aggregation CSV file with sample information that
+    is input for cellranger aggregate. Generate a stamp for each sample once
+    its info is added to CSV file.
+    """
     input:
         info="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/molecule_info.h5"
     output:
@@ -62,7 +74,11 @@ rule cellranger_aggregate_init:
                 out2.write(f"{(wildcards.sample)},{(params.relative_path)},{(params.batch)}\n")
         shell("touch {output.aggregate_init_stamp}")
 
-rule cellranger_aggregate:
+rule aggregate_cellranger:
+    """
+    Aggregate count data from multiple samples using cellranger aggregate.
+    """
+
     input:
         aggregate_init_stamp="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/{sample}.aggregate_init.stamp"
     output:

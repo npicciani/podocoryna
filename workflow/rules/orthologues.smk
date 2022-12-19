@@ -1,7 +1,7 @@
 from datetime import date
 def get_orthofinder_outdir():
     """
-    Generates path to orthofinder results folder with current date as written by orthofinder
+    Generate path to orthofinder gene trees folder with current date as written by orthofinder
     """
     today = date.today()
     monthDay = today.strftime("%b%d")
@@ -24,6 +24,9 @@ rule generate_longest_ORFs:
         "TransDecoder.LongOrfs -t {input.transcriptome_path} --output_dir results/reference/{params.reference}.transdecoder_dir"
 
 rule gunzip:
+    """
+    Decompress (if gzipped) protein files downloaded from public databases.
+    """
     input:
         expand("resources/sequences/ensembl/{species}.pep.fasta.gz",species=ensembl_targets.loc[:,"species"]),
         expand("resources/sequences/ensemblgenomes/{species}.pep.fasta.gz",species=ensemblgenomes_targets.loc[:,"species"]),
@@ -53,6 +56,9 @@ rule gunzip:
         """
 
 rule orthofinder:
+    """
+    Infer gene trees from set of protein sequences downloaded from public databases.
+    """"
     input:
         expand("resources/sequences/{species}.pep.fasta", species=targets.index)
     output:

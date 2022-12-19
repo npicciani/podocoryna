@@ -14,7 +14,9 @@ gdrive_targets = targets.loc[lambda targets: targets['source'] == "gdrive"]
 
 def get_sequence(wildcards, type):
     """
-    Return path to download sequence file
+    Return path for downloading sequence file.
+    Wildcards: target species
+    Type: defined in file "download_targets.tsv" (ensembl, ensembl genomes, other, other gz or gdrive)
     """
     species_units = targets.loc[wildcards.species]
     if type == "ensembl":
@@ -34,6 +36,9 @@ def get_sequence(wildcards, type):
             return species_units["file"]
 
 rule get_ensembl:
+    """
+    Download species protein file from ENSEMBL.
+    """
     output:
         "resources/sequences/ensembl/{species}.pep.fasta.gz" # this renames the original file and keep only the species names as given in the species column of targets dataframe
     params:
@@ -42,6 +47,9 @@ rule get_ensembl:
         "wget http://ftp.ensembl.org/{params} -O {output}"
 
 rule get_ensemblgenomes:
+    """
+    Download species protein file from ENSEMBL Genomes.
+    """
     output:
         "resources/sequences/ensemblgenomes/{species}.pep.fasta.gz" # this renames the original file and keep only the species names as given in the species column of targets dataframe
     params:
@@ -50,6 +58,9 @@ rule get_ensemblgenomes:
         "wget http://ftp.ensemblgenomes.org/{params} -O {output}"
 
 rule get_other:
+    """
+    Download species protein file from random websites.
+    """
     output:
         "resources/sequences/other/{species}.pep.fasta"
     params:
@@ -60,6 +71,9 @@ rule get_other:
         """
 
 rule get_other_gz:
+    """
+    Download compressed (gzipped) species protein file from random websites.
+    """
     output:
         "resources/sequences/other_gz/{species}.pep.fasta.gz"
     params:
@@ -70,6 +84,9 @@ rule get_other_gz:
         """
 
 rule get_gdrive:
+    """
+    Download species protein file from Google Drive.
+    """
     output:
         "resources/sequences/gdrive/{species}.pep.fasta"
     params:

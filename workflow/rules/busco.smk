@@ -1,4 +1,8 @@
 rule busco_scores:
+    """
+    Assess completeness of collapsed reference transcriptome
+    with BUSCO based on dataset metazoa_obd10.
+    """
     input:
         expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta.transcripts.fasta", species=config["species"])
     output:

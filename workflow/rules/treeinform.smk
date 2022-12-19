@@ -1,4 +1,9 @@
 rule collapse_with_treeinform:
+    """
+    Generate a collapsed protein file based on gene trees and threshold
+    of branch lengths for collapsing sequences. If sequences are connected by branches
+    with length less than threshold, keep the longest sequence variant.
+    """
     input:
         gene_trees=get_orthofinder_outdir(),
         script="workflow/scripts/treeinform_collapse.py"
@@ -15,6 +20,9 @@ rule collapse_with_treeinform:
         """
 
 rule plot_subtree_histogram:
+    """
+    Plot distribution of subtree branch lengths from all gene trees in a histogram.
+    """
     input:
         gene_trees=get_orthofinder_outdir(),
         script="workflow/scripts/plot_subtree_histogram.py",
@@ -29,6 +37,9 @@ rule plot_subtree_histogram:
         """
 
 rule match_transcripts:
+    """
+    Generate transcript list and fasta file with transcriptome that corresponds to protein file.
+    """
     input:
         original_reference=expand("{transcriptome_path}", transcriptome_path=config["reference"]["path"]),
         collapsed_proteins=expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta", species=config["species"]),
@@ -42,6 +53,9 @@ rule match_transcripts:
         """
 
 rule select_from_gtf:
+    """
+    Generate a gtf file only with sequences included in the collapsed transcriptome.
+    """
     input:
         gtf=expand("{original_gtf}", original_gtf=config["reference"]["gtf"]),
         script="workflow/scripts/select_from_gtf.py",
