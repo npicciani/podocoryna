@@ -3,7 +3,7 @@ from snakemake.utils import min_version
 min_version("6.4.1")
 
 configfile: "config/config.yaml"
-THRESHOLD_VALS = "0.5,1,2,3,4,5,8,10,15,20,25".split(",")
+THRESHOLD_VALS = "0,0.5,1,2,3,4,5,8,10,15,20,25".split(",")
 SAMPLE_IDS = "Podo1,Podo2,Podo3,Podo4,Podo5".split(",")
 
 # load rules
