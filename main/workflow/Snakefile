@@ -1,0 +1,37 @@
+from snakemake.utils import min_version
+
+min_version("6.4.1")
+
+configfile: "config/config.yaml"
+
+include: "rules/trinotate.smk"
+# include: "rules/blastx.smk"
+
+rule all:
+    input:
+        "results/trinotate/trinotate_annotation_report.xls",
+        "results/trinotate/go_annotations.txt"
+        # "results/blastx-ncbi/blastx.outfmt6",
+        # "results/blastx-isoseq/blastx.outfmt6"
+        # "results/mitofinder",
+
+# rule get_mitochondrial_genes:
+#     input:
+#         nucleotides=expand("results/reference/{transcriptome}_longestORFperGene.fasta", transcriptome=config["reference"]["filename"]),
+#     output:
+#         directory("results/mitofinder")
+#     params:
+#         mem="50GB",
+#         mit_reference="resources/LN901210.1.gb",
+#         mitofinder = expand("{mitofinderPath}", mitofinderPath=config["mitofinder"])
+#     threads: 20
+#     shell:
+#         """
+#         mkdir {output} && cd {output}
+#         {params.mitofinder} -j podocoryna -a ../../{input.nucleotides} -r ../../{params.mit_reference} -o 4 -m {params.mem} -p {threads}
+#         """
+# rule report_metrics:
+#     input:
+#         cellranger_mapping="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/metrics_summary.csv",
+#         busco_summary=expand("results/reference/treeinform/threshold_{{threshold}}/busco/{species}.collapsed.fasta.transcripts.fasta/short_summary.specific.metazoa_odb10.{species}.collapsed.fasta.transcripts.fasta.txt", species=config["species"])
+#     output:
