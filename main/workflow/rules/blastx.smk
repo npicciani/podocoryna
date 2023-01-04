@@ -3,75 +3,41 @@ rule makeblastdb:
     Make blast database for reference from Matthew and Sally
     """
     input:
-        sally = "results/reference-isoseq-original/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.transdecoder_dir/longest_orfs.pep",
-        matthew = "results/reference-ncbi/Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest.fasta_longestORFperGene.pep"
+        expand("{proteome}", proteome=config["reference"]["proteome"])
     output:
-        "results/blastx-isoseq/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.longest_orfs.pep.psq",
-        "results/blastx-ncbi/Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest.fasta_longestORFperGene.pep.psq"
+        "results/blastx/Podocoryna_carnea.collapsed.fasta.psq"
     params:
-        dbname_matthew = "Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest.fasta_longestORFperGene.pep",
-        dbname_sally = "Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.longest_orfs.pep"
+        dbname="Podocoryna_carnea.collapsed.fasta"
     conda:
         "../envs/trinotate.yaml"
     shell:
         """
-        cd results/blastx-ncbi
-        makeblastdb -in ../../{input.matthew} -out {params.dbname_matthew} -dbtype prot
-
-        cd ../blastx-isoseq
-        makeblastdb -in ../../{input.sally} -out {params.dbname_sally} -dbtype prot
-
+        cd results/blastx
+        makeblastdb -in ../../{input} -out {params.dbname} -dbtype prot
         """
-rule blastxIsoseq:
-    """
-    Run blastx
-    """
-    input:
-        "results/blastx-isoseq/Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.longest_orfs.pep.psq",
-        fastafile = "resources/Podocoryna_lit_markers.fasta"
-    output:
-        "results/blastx-isoseq/blastx.outfmt6"
-    threads: 12
-    conda:
-        "../envs/trinotate.yaml"
-    shell:
-        """
-        cd results/blastx-isoseq
-
-        # Blastx against reference db
-
-        blastx \
-        -query ../../{input.fastafile} \
-        -db Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.longest_orfs.pep \
-        -num_threads 12 \
-        -outfmt "6 qseqid sseqid qstart qend sstart send qstrand evalue" \
-        -evalue 1e-5 > blastx.outfmt6
-        """
-
 rule blastx:
     """
     Run blastx
     """
     input:
-        "results/blastx-ncbi/Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest.fasta_longestORFperGene.pep.psq",
+        "results/blastx/Podocoryna_carnea.collapsed.fasta.psq",
         fastafile = "resources/Podocoryna_lit_markers.fasta"
     output:
-        "results/blastx-ncbi/blastx.outfmt6"
+        "results/blastx/blastx.outfmt6"
     threads: 12
     conda:
         "../envs/trinotate.yaml"
     shell:
         """
-        cd results/blastx-ncbi
+        cd results/blastx
 
         # Blastx against reference db
-
         blastx \
         -query ../../{input.fastafile} \
-        -db Podocoryna_carnea_transcriptome_2021_clean_NCBI_latest.fasta_longestORFperGene.pep \
+        -db Podocoryna_carnea.collapsed.fasta \
         -num_threads 12 \
         -outfmt "6 qseqid sseqid qstart qend sstart send qstrand evalue" \
-        -evalue 1e-5 > blastx.outfmt6
+        -evalue 1e-8 > blastx.outfmt6
         """
 
 # rule makeblastdb:
