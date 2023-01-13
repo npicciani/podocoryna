@@ -3,16 +3,23 @@ from snakemake.utils import min_version
 min_version("6.4.1")
 
 configfile: "config/config.yaml"
+SAMPLE_IDS = "Podo1,Podo2,Podo3,Podo4,Podo5".split(",")
+
 
 include: "rules/trinotate.smk"
-# include: "rules/blastx.smk"
+include: "rules/blast.smk"
+include: "rules/cellranger.smk"
 
 rule all:
     input:
         "results/trinotate/trinotate_annotation_report.xls",
-        "results/trinotate/go_annotations.txt"
-        # "results/blastx-ncbi/blastx.outfmt6",
-        # "results/blastx-isoseq/blastx.outfmt6"
+        "results/trinotate/go_annotations.txt",
+        "results/blast/blastx.outfmt6",
+        "results/blast/blastp.outfmt6",
+        "results/cellranger/reference",
+        expand("results/cellranger/{sample}/outs/molecule_info.h5", sample=SAMPLE_IDS)
+
+
         # "results/mitofinder",
 
 # rule get_mitochondrial_genes:

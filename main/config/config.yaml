@@ -6,6 +6,8 @@ reference:
   proteome: resources/reference/Podocoryna_carnea.collapsed.fasta
   longest_orfs: resources/reference/longest_orfs.pep # copied manually to resources folder
   gene_to_transcript: resources/reference/gene_transcript_map.txt # built manually from gtf file
+  gtfname: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta.eggnog.positive.gtf
+
 
 # Install according to https://github.com/Trinotate/Trinotate.github.io/wiki/Software-installation-and-data-required
 rnammer: ~/local/bin/rnammer-1.2/rnammer # path to rnammer
@@ -14,3 +16,11 @@ signalp: ~/local/bin/signalp-4.1/signalp # path to signalp
 
 # Install Mitofinder
 mitofinder: /home/nnp9/local/bin/MitoFinder/mitofinder #path to mitofinder
+
+# Sample batches
+batch:
+  Podo1: STD_v3
+  Podo2: HT_v3
+  Podo3: HT_v3
+  Podo4: HT_v3
+  Podo5: HT_v3
