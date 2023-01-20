@@ -32,11 +32,11 @@ rule gunzip:
         expand("resources/sequences/ensemblgenomes/{species}.pep.fasta.gz",species=ensemblgenomes_targets.loc[:,"species"]),
         expand("resources/sequences/other/{species}.pep.fasta",species=other_targets.loc[:,"species"]),
         expand("resources/sequences/other_gz/{species}.pep.fasta.gz",species=other_gz_targets.loc[:,"species"]),
-        expand("resources/sequences/gdrive/{species}.pep.fasta",species=gdrive_targets.loc[:,"species"])
+        expand("resources/sequences/gdrive/{species}.pep.fasta",species=gdrive_targets.loc[:,"species"]),
+        reference_peptides=expand("results/reference/{transcriptome_stem}.transdecoder_dir/longest_orfs.pep", transcriptome_stem=config["reference"]["filestem"])
     output:
         expand("resources/sequences/{species}.pep.fasta", species=targets.index)
     params:
-        reference_peptides=expand("results/reference/{transcriptome_stem}.transdecoder_dir/longest_orfs.pep", transcriptome_stem=config["reference"]["filestem"]),
         copyfile=expand("resources/sequences/{species}.pep.fasta", species=config["species"])
     shell:
         """
@@ -52,7 +52,7 @@ rule gunzip:
         subdirs=`ls -d $dir/*/`
         rm -R $subdirs
 
-        cp {params.reference_peptides} {params.copyfile}
+        cp {input.reference_peptides} {params.copyfile}
         """
 
 rule orthofinder:
