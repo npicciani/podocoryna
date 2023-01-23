@@ -12,10 +12,10 @@ rule mkref_cellranger:
         transcript=expand("../ref_optimization/results/reference/treeinform/threshold_15/{species}.collapsed.fasta.transcripts.fasta", species=config["species"]),
         gtf=expand("../ref_optimization/results/reference/treeinform/threshold_15/{original_gtf_name}.selected.gtf", original_gtf_name=config["reference"]["gtfname"])
     output:
-        directory("results/cellranger/reference")
+        directory("results_not_symbolic/cellranger/reference")
     threads: 8
     params:
-        outdir="results/cellranger"
+        outdir="results_not_symbolic/cellranger"
     shell:
         """
         cd {params.outdir}
@@ -30,17 +30,17 @@ rule count_cellranger:
     """
 
     input:
-        input_dir="results/cellranger/reference"
+        input_dir="results_not_symbolic/cellranger/reference"
     output:
-        outfile="results/cellranger/{sample}/outs/molecule_info.h5",
+        outfile="results_not_symbolic/cellranger/{sample}/outs/molecule_info.h5",
     threads: 8
     params:
-        outdir="results/cellranger",
+        outdir="results_not_symbolic/cellranger",
         reference_dir="./reference",
         fastqs_dir="../../../ref_optimization/resources/rawdata/{sample}"
     shell:
         """
-        rm -rf results/cellranger/{wildcards.sample}
+        rm -rf results_not_symbolic/cellranger/{wildcards.sample}
         cd {params.outdir}
         cellranger count --id={wildcards.sample} \
                          --transcriptome={params.reference_dir} \

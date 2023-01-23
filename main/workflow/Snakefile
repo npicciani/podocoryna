@@ -19,6 +19,10 @@ rule all:
         "results/cellranger/reference",
         expand("results/cellranger/{sample}/outs/molecule_info.h5", sample=SAMPLE_IDS)
 
+        # expand("results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/{sample}.aggregate_init.stamp",threshold=THRESHOLD_VALS, sample=SAMPLE_IDS),
+        # expand("results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/{sample}.aggregate.stamp",threshold=THRESHOLD_VALS, sample=SAMPLE_IDS)
+
+
 
         # "results/mitofinder",
 
