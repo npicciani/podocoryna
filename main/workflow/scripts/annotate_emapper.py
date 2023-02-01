@@ -22,9 +22,11 @@ import argparse
 from Bio import SeqIO
 
 # Path to programs and files
-emapper = "/home/picciani/local/bin/eggnog-mapper-2/emapper.py"  # path to eggNOG mapper version 2
-python = "/home/picciani/local/bin/anaconda2/envs/py27/bin/python"  # path to python 2.7
-gonames_file = "/home/picciani/local/datasets/go_terms_2019.txt"  # GO Terms IDs and their corresponding names from 2019 GO release
+emapper = "/gpfs/ysm/project/dunn/nnp9/conda_envs/emapper/bin/emapper.py"  # path to eggNOG mapper 2.0.6
+python = (
+    "/gpfs/ysm/project/dunn/nnp9/conda_envs/emapper/bin/python"  # path to python 3.7
+)
+gonames_file = "/home/nnp9/local/datasets/go_terms_2019.txt"  # GO Terms IDs and their corresponding names from 2019 GO release
 
 
 # User inputs
