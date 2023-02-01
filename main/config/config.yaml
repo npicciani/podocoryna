@@ -1,8 +1,12 @@
 species: Podocoryna_carnea
 
+# Path to accession numbers and links for public data download
+targets: config/download_targets.tsv
+
 # Reference after processing (threshold 15):
 reference:
   transcriptome: resources/reference/Podocoryna_carnea.collapsed.fasta.transcripts.fasta
+  transcriptome_stem: Podocoryna_carnea.collapsed.fasta.transcripts.fasta
   proteome: resources/reference/Podocoryna_carnea.collapsed.fasta
   longest_orfs: resources/reference/longest_orfs.pep # copied manually to resources folder
   gene_to_transcript: resources/reference/gene_transcript_map.txt # built manually from gtf file
