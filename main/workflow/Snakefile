@@ -17,14 +17,14 @@ rule all:
         # "results/trinotate/trinotate_annotation_report.xls",
         # "results/trinotate/go_annotations.txt",
         expand("resources/sequences/{species}.pep.fasta", species=targets.index),
-        get_orthofinder_outdir(),
-        "results/annotations/all.pep.fasta.emapper.annotations",
+        # get_orthofinder_outdir(),
+        # "results/annotations/all.pep.emapper.annotations",
         "results/blast/blastx.outfmt6",
         "results/blast/blastp.outfmt6",
         "results/cellranger/reference",
         expand("results/cellranger/{sample}/outs/molecule_info.h5", sample=SAMPLE_IDS),
         expand("results/cellranger/{sample}/{sample}.aggregate_init.stamp",sample=SAMPLE_IDS),
-        # "results/cellranger/aggregate/aggregated/outs/molecule_info.h5"
+        "results/cellranger/aggregate/aggregated/outs/web_summary.html"
 
 
 
