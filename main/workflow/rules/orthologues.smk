@@ -51,13 +51,15 @@ rule emapper_annotate:
     params:
         outdir="results/annotations",
         script="workflow/scripts/annotate_emapper.py",
-        peptides="resources/sequences/all.pep.fasta"
+        peptides="resources/sequences/all.pep.fasta",
+        emapper_path="$CONDA_PREFIX/bin/emapper.py",
+        python_path="$CONDA_PREFIX/bin/python"
     conda:
-        "../../workflow/envs/emapper.yaml" #eggnog-mapper=2.0.6, python=3.7.9
+        "../../workflow/envs/emapper.yaml" #eggnog-mapper=2.1.10, python=3.7.9
     shell:
         """
         cat resources/sequences/*.fasta > {params.peptides}
-        python {params.script} {params.peptides} {params.outdir}
+        python {params.script} {params.peptides} {params.outdir} {params.python_path} {params.emapper_path}
         """
 
 rule orthofinder:
