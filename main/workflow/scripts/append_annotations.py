@@ -1,50 +1,72 @@
 # -*- coding: utf-8 -*-
 # Written by Natasha Picciani
-# Oct 31, 2022
-# usage: identify_transcripts.py fastafile
+# Feb 22, 2023
 
-import re
 import sys
+import ahocorasick
 
 annotations_master = sys.argv[1]
 gene_trees_master = sys.argv[2]
 outdir = sys.argv[3]
 gene_trees_appended = f"{outdir}/gene_trees.master.annotated.txt"
 
-gene_names_dict = {}
-# GOs_dict={}
-with open(annotations_master, "r") as infile:
-    for line in infile:
-        if line[0] == "#":
-            continue
-        else:
+
+def make_GO_dictionary(emmaper_annotation_file):
+    """Make dictionary with Protein IDS and corresponding GOs pulled
+    from functional annotation file generated with Emapper 2.1.10
+    """
+    GO_dict = {}
+    with open(emmaper_annotation_file, "r") as infile:
+        for line in infile:
             line = line.strip("\n")
             columns = line.split("\t")
             proteinID = columns[0]
-            proteinID_gene_name = f"{columns[0]}_{columns[8]}"
-            gene_name = columns[8]  # Preferred_name
-            gene_description = columns[7]  # best_og_desc
-            # goterms_field = columns[9]  # GOs
+            goterms_field = columns[9]  # GOs
+            GO_dict[proteinID] = goterms_field
+    return GO_dict
+
+
+def make_gene_names_dictionary(emmaper_annotation_file):
+    """Make dictionary with Protein IDS and corresponding Gene Names pulled
+    from functional annotation file generated with Emapper 2.1.10
+    """
+    gene_names_dict = {}
+    with open(emmaper_annotation_file, "r") as infile:
+        for line in infile:
+            line = line.strip("\n")
+            columns = line.split("\t")
+            proteinID = columns[0]
+            gene_name = columns[8]
+            proteinID_gene_name = f"{proteinID}_{gene_name}"
             gene_names_dict[proteinID] = proteinID_gene_name
-            # GOs_dict[proteinID] = goterms_field
-    # outfile.write(proteinID_gene_name+"\t"+proteinID+"\t"+gene_name+"\t"+gene_description+"\t"+goterms_field+"\n")
+    return gene_names_dict
 
-with open(gene_trees_master) as trees:
-    lines = trees.readlines()
-    output = []
-    # replace protein ID with ID+gene name
-    for line in lines:
-        new_line = line
-        for key in gene_names_dict.keys():
-            new_line = new_line.replace(key, gene_names_dict[key])
-            output.append(new_line)
 
-# gos=[]
-# for line in lines:
-# 	for key in GOs_dict.keys():
-# 		if key in line:
-# 			gos.append(GOs_dict[key])
+def make_automaton(input_dictionary):
+    """Build an Aho-Corasick automaton from a dictionary file and return
+    it.
+    Source: https://codereview.stackexchange.com/questions/170987/optimize-search-and-replace-in-one-file-based-on-dictionary-in-another-file
+    """
+    automaton = ahocorasick.Automaton()
+    for key, value in input_dictionary.items():
+        automaton.add_word(key, (key, value))
+    automaton.make_automaton()
+    return automaton
 
-with open(gene_trees_appended, "w") as new_trees:
-    for line in output:
-        new_trees.write(line)
+
+def apply_automaton(automaton, input_filename, output_filename):
+    """Apply an Aho-Corasick automaton to an input file, replacing the
+    first occurrence of a key in each line with the corresponding
+    value, and writing the result to the output file.
+    Source: https://codereview.stackexchange.com/questions/170987/optimize-search-and-replace-in-one-file-based-on-dictionary-in-another-file
+    """
+    with open(input_filename) as infile, open(output_filename, "w") as outfile:
+        for line in infile:
+            for end, (key, value) in automaton.iter(line):
+                line = line.replace(key, value)
+            outfile.write(line)
+
+
+gene_names_dict = make_gene_names_dictionary(annotations_master)
+gene_names_automaton = make_automaton(gene_names_dict)
+apply_automaton(gene_names_automaton, gene_trees_master, gene_trees_appended)
