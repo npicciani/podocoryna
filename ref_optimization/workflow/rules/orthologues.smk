@@ -53,12 +53,13 @@ rule gunzip:
         rm -R $subdirs
 
         cp {input.reference_peptides} {params.copyfile}
+        cp resources/local/Nemopilema_nomurai.pep.fasta resources/sequences/Nemopilema_nomurai.pep.fasta
         """
 
 rule orthofinder:
     """
     Infer gene trees from set of protein sequences downloaded from public databases.
-    """"
+    """
     input:
         expand("resources/sequences/{species}.pep.fasta", species=targets.index)
     output:
