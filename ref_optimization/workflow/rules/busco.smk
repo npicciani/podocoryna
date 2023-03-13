@@ -6,14 +6,12 @@ rule busco_scores:
     input:
         expand("results/reference/treeinform/threshold_{{threshold}}/{species}.collapsed.fasta.transcripts.fasta", species=config["species"])
     output:
-        # expand("results/reference/treeinform/threshold_{{threshold}}/busco/{species}.collapsed.fasta.transcripts.fasta/short_summary.specific.metazoa_odb10.{species}.collapsed.fasta.transcripts.fasta.txt", species=config["species"])
         directory("results/reference/treeinform/threshold_{threshold}/busco")
     threads: 20
     conda:
         "../envs/busco.yaml" #busco=5.1.3
     params:
         download_path="resources/busco_downloads",
-        # outdir="results/reference/treeinform/threshold_{{threshold}}/busco",
         mode="transcriptome",
         lineage="metazoa",
         filename=expand("{species}.collapsed.fasta.transcripts.fasta", species=config["species"])
@@ -26,8 +24,8 @@ rule plot_QC:
     """
     input:
         expand("results/reference/treeinform/threshold_{threshold}/{species}.collapsed.fasta.transcripts.fasta", species=config["species"], threshold=THRESHOLD_VALS),
-        expand("results/reference/treeinform/threshold_{threshold}/busco", threshold=THRESHOLD_VALS)
-        # expand("results/reference/treeinform/threshold_{threshold}/busco/{species}.collapsed.fasta.transcripts.fasta/short_summary.specific.metazoa_odb10.{species}.collapsed.fasta.transcripts.fasta.txt", species=config["species"],threshold=THRESHOLD_VALS)
+        expand("results/reference/treeinform/threshold_{threshold}/busco", threshold=THRESHOLD_VALS),
+        expand("results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/metrics_summary.csv", sample=SAMPLE_IDS, threshold=THRESHOLD_VALS)
     output:
         "results/reports/busco_duplication_scores.png",
         "results/reports/busco_completeness_scores.png",

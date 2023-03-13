@@ -28,11 +28,10 @@ rule count_cellranger:
     """
     Run cellranger count to align single cell reads to reference transcriptome.
     """
-
     input:
         input_dir="results/reference/treeinform/threshold_{threshold}/cellranger/reference"
     output:
-        outfile="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/molecule_info.h5",
+        outfile="results/reference/treeinform/threshold_{threshold}/cellranger/{sample}/outs/metrics_summary.csv",
     threads: 8
     params:
         outdir="results/reference/treeinform/threshold_{threshold}/cellranger",

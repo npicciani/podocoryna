@@ -139,7 +139,6 @@ plt.clf()
 
 ### Cell Ranger metrics
 #### Reads mapped confidently to transcriptome
-# plt.rcParams["figure.figsize"] = (20,10)
 plt.rcParams["figure.dpi"] = 300
 ax = sns.stripplot(
     data=res, x="Threshold", y="Reads Mapped Confidently to Transcriptome", hue="Sample"
@@ -159,7 +158,6 @@ plt.savefig(
 plt.clf()
 
 #### Reads mapped confidently to genome
-# plt.rcParams["figure.figsize"] = (20,10)
 plt.rcParams["figure.dpi"] = 300
 ax = sns.stripplot(
     data=res, x="Threshold", y="Reads Mapped Confidently to Genome", hue="Sample"
@@ -171,6 +169,22 @@ ax.set_title("Reads Mapped Confidently to Genome")
 plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left", borderaxespad=0)
 plt.savefig(
     f"{outdir}/reads_mapped_confidently_to_genome.png",
+    format="png",
+    facecolor="w",
+    bbox_inches="tight",
+)
+plt.clf()
+
+#### Reads mapped to genome
+plt.rcParams["figure.dpi"] = 300
+ax = sns.stripplot(data=res, x="Threshold", y="Reads Mapped to Genome", hue="Sample")
+xticks = list(set(res["Threshold"].sort_values()))[:-1]
+xticklabels = (f"{n}" for n in xticks)
+ax.set_xticklabels(xticklabels)
+ax.set_title("Reads Mapped to Genome")
+plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left", borderaxespad=0)
+plt.savefig(
+    f"{outdir}/reads_mapped_to_genome.png",
     format="png",
     facecolor="w",
     bbox_inches="tight",
