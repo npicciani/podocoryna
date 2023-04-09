@@ -9,8 +9,8 @@ rule mkref_cellranger:
     Make references using cellranger and the thresholded transcriptome files
     """
     input:
-        transcript=expand("../ref_optimization/results/reference/treeinform/threshold_15/{species}.collapsed.fasta.transcripts.fasta", species=config["species"]),
-        gtf=expand("../ref_optimization/results/reference/treeinform/threshold_15/{original_gtf_name}.selected.gtf", original_gtf_name=config["reference"]["gtfname"])
+        transcript=config["reference"]["transcriptome_with_mito"],
+        gtf=expand("resources/reference/{gtf}",gtf=config["reference"]["gtfname_with_mito"])
     output:
         directory("results/cellranger/reference")
     threads: 8

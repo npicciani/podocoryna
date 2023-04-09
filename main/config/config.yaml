@@ -11,6 +11,9 @@ reference:
   longest_orfs: resources/reference/longest_orfs.pep # copied manually to resources folder
   gene_to_transcript: resources/reference/gene_transcript_map.txt # built manually from gtf file
   gtfname: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta.eggnog.positive.gtf
+  transcriptome_with_mito: resources/reference/Podocoryna_carnea.collapsed.fasta.transcripts_t8_mito.fasta
+  transcriptome_with_mito_stem: Podocoryna_carnea.collapsed.fasta.transcripts_t8_mito.fasta
+  gtfname_with_mito: Male_Med.ALL.Clustered.hq.CLEAN.cd_99.Min200.fasta.eggnog.positive.gtf.selected_t8_mito.gtf
 
 
 # Install according to https://github.com/Trinotate/Trinotate.github.io/wiki/Software-installation-and-data-required
