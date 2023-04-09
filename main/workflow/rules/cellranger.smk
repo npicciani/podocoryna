@@ -45,7 +45,6 @@ rule count_cellranger:
         cellranger count --id={wildcards.sample} \
                          --transcriptome={params.reference_dir} \
                          --fastqs={params.fastqs_dir} \
-                         --force-cells=15000 \
                          --localcores={threads} \
                          --localmem=64
         """
