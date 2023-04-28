@@ -1,12 +1,16 @@
 from datetime import date
+import os
 def get_orthofinder_outdir():
-    """
-    Generate path to orthofinder gene trees folder with current date as written by orthofinder
-    """
-    today = date.today()
-    monthDay = today.strftime("%b%d")
-    outdir= f"results/orthofinder/Results_{monthDay}/Gene_Trees"
-    return outdir
+    ortho_dir='results/orthofinder'
+    if os.path.exists(ortho_dir):
+        for results_folder in os.listdir(ortho_dir):
+            results_path=f"results/orthofinder/{results_folder}/Gene_Trees"
+            return results_path
+    else:
+        today = date.today()
+        monthDay = today.strftime("%b%d")
+        outdir= f"results/orthofinder/Results_{monthDay}/Gene_Trees"
+        return outdir
 
 rule gunzip:
     """
@@ -83,8 +87,7 @@ rule append_annotations:
     Append functional annotations to sequence headers in gene trees.
     """
     input:
-        # gene_trees_folder=directory(get_orthofinder_outdir()),
-        gene_trees_folder=expand("results/orthofinder/Results_{monthDay}/Gene_Trees",monthDay=ORTHODATE),
+        gene_trees_folder=directory(get_orthofinder_outdir()),
         annotations=expand("results/emapper/{species}/{species}.pep.emapper.annotations", species=targets.index)
     output:
         "results/annotations/gene_trees.master.annotated.txt"
