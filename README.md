@@ -10,3 +10,4 @@ To repeat reference optimization pipeline with your own data:
 2. In `config/download_targets.tsv`, include species name and sources for taxa you would like to include in your gene trees.
 3. In the `workflow/Snakefile`, include your sample IDs on line 7
 4. Change species name in `config.yaml`.
+5. Cellranger needs to be installed separately and made available on your PATH. See intructions for download here: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/tutorial_in
