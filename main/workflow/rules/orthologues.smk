@@ -42,6 +42,7 @@ rule gunzip:
         rm -R $subdirs
 
         cp {input.reference_peptides} {params.copyfile}
+        cp resources/local/Nemopilema_nomurai.pep.fasta resources/sequences/Nemopilema_nomurai.pep.fasta
         """
 
 rule emapper_annotate:
